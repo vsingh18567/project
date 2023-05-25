@@ -3,20 +3,22 @@ package edu.upenn.cis573.project;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 
-public class WebClient implements Runnable {
+public class WebClient {
 
     private String host;
     private int port;
-    protected String response;
-    protected String request;
 
     public WebClient(String host, int port) {
         this.host = host;
@@ -35,55 +37,50 @@ public class WebClient implements Runnable {
      */
     public String makeRequest(String resource, Map<String, Object> queryParams) {
 
-        request = "http://" + host + ":" + port + resource + "?";
-
-        for (String key : queryParams.keySet()) {
-            request += key + "=" + queryParams.get(key) + "&";
-
-        }
-        Log.v("webclient", request);
+        //Log.v("webclient", request);
 
         /*
         Web traffic must be done in a background thread in Android.
-         */
+        */
         try {
             ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(this);
+            Future<String> future = executor.submit( () -> {
+                String response = null;
+                try {
+                    String request = "http://" + host + ":" + port + resource + "?";
 
-            // this waits for up to 1 second
-            // it's a bit of a hack because it's not truly asynchronous
-            // but it should be okay for our purposes (and is a lot easier)
-            executor.awaitTermination(1, TimeUnit.SECONDS);
+                    for (String key : queryParams.keySet()) {
+                        request += key + "=" + queryParams.get(key) + "&";
 
-            Log.v("webclient", response);
-            return response;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return e.toString();
-        }
-    }
+                    }
+                    URL url = new URL(request);
+                    url.openConnection();
+                    Scanner in = new Scanner(url.openStream());
+                    response = "";
+                    while (in.hasNext()) {
+                        String line = in.nextLine();
+                        response += line;
+                    }
 
+                    in.close();
 
-
-    @Override
-    public void run() {
-        try {
-            URL url = new URL(request);
-            url.openConnection();
-            Scanner in = new Scanner(url.openStream());
-            response = "";
-            while (in.hasNext()) {
-                String line = in.nextLine();
-                response += line;
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return response;
             }
+            );
 
-            in.close();
+            return future.get();
+
         }
         catch (Exception e) {
+            // uh oh
             e.printStackTrace();
-            response = e.toString();
+            return null;
         }
+        
     }
 
 
