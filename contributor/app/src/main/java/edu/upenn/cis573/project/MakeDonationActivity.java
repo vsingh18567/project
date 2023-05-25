@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MakeDonationActivity extends AppCompatActivity {
 
@@ -148,6 +150,13 @@ public class MakeDonationActivity extends AppCompatActivity {
             Toast.makeText(this, "Thank you for your donation!", Toast.LENGTH_LONG).show();
             contributor.getDonations().add(new Donation(selectedFund.getName(), contributor.getName(), Long.parseLong(amount), new Date().toString()));
 
+            Executor executor = Executors.newSingleThreadExecutor();
+            executor.execute( () -> {
+                        try { Thread.sleep(3000); } catch (Exception e) { }
+                        finish();
+                    });
+            /*
+            // this approach is no longer supported
             new AsyncTask<String, String, String>() {
 
                 protected String doInBackground(String... inputs) {
@@ -160,7 +169,7 @@ public class MakeDonationActivity extends AppCompatActivity {
                     finish();
                 }
             }.execute();
-
+            */
 
         }
         else {
