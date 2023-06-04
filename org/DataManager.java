@@ -39,7 +39,7 @@ public class DataManager {
 				JSONObject data = (JSONObject)json.get("data");
 				String fundId = (String)data.get("_id");
 				String name = (String)data.get("name");
-				String description = (String)data.get("descrption");
+				String description = (String)data.get("description");
 				Organization org = new Organization(fundId, name, description);
 
 				JSONArray funds = (JSONArray)data.get("funds");
@@ -49,10 +49,9 @@ public class DataManager {
 					fundId = (String)fund.get("_id");
 					name = (String)fund.get("name");
 					description = (String)fund.get("description");
-					long target = (Long)fund.get("target");
+					Double target = (Double) fund.get("target");
 
 					Fund newFund = new Fund(fundId, name, description, target);
-
 					JSONArray donations = (JSONArray)fund.get("donations");
 					List<Donation> donationList = new LinkedList<>();
 					Iterator it2 = donations.iterator();
@@ -115,7 +114,7 @@ public class DataManager {
 	 * This method creates a new fund in the database using the /createFund endpoint in the API
 	 * @return a new Fund object if successful; null if unsuccessful
 	 */
-	public Fund createFund(String orgId, String name, String description, long target) {
+	public Fund createFund(String orgId, String name, String description, double target) {
 
 		try {
 

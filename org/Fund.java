@@ -6,10 +6,10 @@ public class Fund {
 	private String id;
 	private String name;
 	private String description;
-	private long target;
+	private Double target;
 	private List<Donation> donations;
 	
-	public Fund(String id, String name, String description, long target) {
+	public Fund(String id, String name, String description, Double target) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -29,7 +29,7 @@ public class Fund {
 		return description;
 	}
 
-	public long getTarget() {
+	public Double getTarget() {
 		return target;
 	}
 
