@@ -10,6 +10,7 @@ We would like to get the following additional tasks graded: 1.4, 1.5, xxx
 ### what to add here: description of any bugs that you found and fixed 
 
 ## Task 1.3. Organization (Java) App display total donations for fund
+To display total donations, the displayFund(fundNumber) method was adjusted. Within the for-loop that prints out each donation, the amount of each donation is now also being added to a new variable totalDonation. The amount is then divided by the value of fund.getTarget() to get the percentage of target that ahs been reached.  
 
 ## Task 1.4. Contributor (Android) App testing and debugging
 ### what to add here: description of any bugs that you found and fixed 
