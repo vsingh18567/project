@@ -15,15 +15,15 @@ Bugs
 - `org/DataManager.java:attemptLogin`: If funds is null, don't iterate over it but still return object
 - `org/DataManager.java:createFund`: Check for nullity before making request
 - `org/DataManager.java:getContributorName`: Check for id nullity before making request
-### what to add here: description of any bugs that you found and fixed 
 
 ## Task 1.3. Organization (Java) App display total donations for fund
-To display total donations, the displayFund(fundNumber) method was adjusted. Within the for-loop that prints out each donation, the amount of each donation is now also being added to a new variable totalDonation. The amount is then divided by the value of fund.getTarget() to get the percentage of target that ahs been reached.  
+To display total donations, the displayFund(fundNumber) method was adjusted. Within the for-loop that prints out each donation, the amount of each donation is now also being added to a new variable totalDonation. The amount is then divided by the value of fund.getTarget() to get the percentage of target that has been reached.  
 
 ## Task 1.4. Contributor (Android) App testing and debugging
 ### what to add here: description of any bugs that you found and fixed 
 
 ## Task 1.5. Contributor (Android) App display total donations
+To display total donations, the onResume() method in the ViewDonationsActivity class was adjusted. Within the for-loop that adds all donations to the donations array, the amount of each donation is now also being added to a new variable totalDonations. totalDonations is then added to the donations array in order to display it as another entry in the ListView.
 
 ## Task 
 
