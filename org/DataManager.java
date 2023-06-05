@@ -34,40 +34,45 @@ public class DataManager {
 			JSONObject json = (JSONObject) parser.parse(response);
 			String status = (String)json.get("status");
 
+			if (status == null) { return null; }
 
 			if (status.equals("success")) {
 				JSONObject data = (JSONObject)json.get("data");
 				String fundId = (String)data.get("_id");
+				if (fundId == null) {
+					return null;
+				}
 				String name = (String)data.get("name");
 				String description = (String)data.get("description");
 				Organization org = new Organization(fundId, name, description);
 
 				JSONArray funds = (JSONArray)data.get("funds");
-				Iterator it = funds.iterator();
-				while(it.hasNext()){
-					JSONObject fund = (JSONObject) it.next(); 
-					fundId = (String)fund.get("_id");
-					name = (String)fund.get("name");
-					description = (String)fund.get("description");
-					Double target = (Double) fund.get("target");
+				if (funds != null) {
+					Iterator it = funds.iterator();
+					while(it.hasNext()){
+						JSONObject fund = (JSONObject) it.next();
+						fundId = (String)fund.get("_id");
+						name = (String)fund.get("name");
+						description = (String)fund.get("description");
+						Double target = (Double) fund.get("target");
 
-					Fund newFund = new Fund(fundId, name, description, target);
-					JSONArray donations = (JSONArray)fund.get("donations");
-					List<Donation> donationList = new LinkedList<>();
-					Iterator it2 = donations.iterator();
-					while(it2.hasNext()){
-						JSONObject donation = (JSONObject) it2.next();
-						String contributorId = (String)donation.get("contributor");
-						String contributorName = this.getContributorName(contributorId);
-						long amount = (Long)donation.get("amount");
-						String date = (String)donation.get("date");
-						donationList.add(new Donation(fundId, contributorName, amount, date));
+						Fund newFund = new Fund(fundId, name, description, target);
+						JSONArray donations = (JSONArray)fund.get("donations");
+						List<Donation> donationList = new LinkedList<>();
+						Iterator it2 = donations.iterator();
+						while(it2.hasNext()){
+							JSONObject donation = (JSONObject) it2.next();
+							String contributorId = (String)donation.get("contributor");
+							String contributorName = this.getContributorName(contributorId);
+							long amount = (Long)donation.get("amount");
+							String date = (String)donation.get("date");
+							donationList.add(new Donation(fundId, contributorName, amount, date));
+						}
+
+						newFund.setDonations(donationList);
+
+						org.addFund(newFund);
 					}
-
-					newFund.setDonations(donationList);
-
-					org.addFund(newFund);
-
 				}
 
 				return org;
@@ -91,6 +96,9 @@ public class DataManager {
 
 			Map<String, Object> map = new HashMap<>();
 			map.put("id", id);
+			if (id == null) {
+				return null;
+			}
 			String response = client.makeRequest("/findContributorNameById", map);
 
 			JSONParser parser = new JSONParser();
@@ -117,7 +125,7 @@ public class DataManager {
 	public Fund createFund(String orgId, String name, String description, double target) {
 
 		try {
-
+			if (orgId == null || name == null || description == null) {return null;}
 			Map<String, Object> map = new HashMap<>();
 			map.put("orgId", orgId);
 			map.put("name", name);
@@ -128,7 +136,7 @@ public class DataManager {
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(response);
 			String status = (String)json.get("status");
-
+			if (status == null) {return null;}
 			if (status.equals("success")) {
 				JSONObject fund = (JSONObject)json.get("data");
 				String fundId = (String)fund.get("_id");

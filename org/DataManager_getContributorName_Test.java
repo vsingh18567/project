@@ -33,7 +33,6 @@ public class DataManager_getContributorName_Test {
 
     @Test
     public void testSuccess() {
-
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {

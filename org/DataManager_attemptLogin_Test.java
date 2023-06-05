@@ -80,4 +80,41 @@ public class DataManager_attemptLogin_Test {
         assertNull(org);
 
     }
+
+    @Test
+    public void testOrgMustHaveID() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3002) {
+
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"success\",\"data\":{\"name\":\"hello\",\"description\":\"afund\",\"funds\":[{\"_id\":\"1\",\"name\":\"fund1\",\"description\":\"fund\",\"target\":123.4,\"donations\":[{\"contributor\":\"me\",\"amount\":1,\"date\":\"1/1/01\",}]}]}}";
+
+            }
+
+        });;
+
+        Organization org = dm.attemptLogin("name", "pass");
+
+        assertNull(org);
+
+    }
+
+    @Test
+    public void testFundsNull() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3002) {
+
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"success\",\"data\":{\"_id\":\"hello\",\"name\":\"hello\",\"description\":\"afund\"}}";
+
+            }
+        });;
+
+        Organization org = dm.attemptLogin("name", "pass");
+
+        assertNotNull(org);
+
+
+    }
+
 }

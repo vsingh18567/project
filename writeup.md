@@ -8,9 +8,13 @@ We would like to get the following additional tasks graded: 1.4, 1.5, xxx
 
 ## Task 1.2. Organization (Java) App debugging
 Bugs
-- `org/DataManger.java:42`: misspelling of description
+- `org/DataManger.java:attemptLogin`: misspelling of description
 - JSON parses decimals as doubles not floats. For ease, the `Fund` class is altered to use doubles throughout the codebase
-- 
+- `org/DataManager.java:attemptLogin` Organization must have id: Return null if id is missing.
+- There must be a status: Return null if no status
+- `org/DataManager.java:attemptLogin`: If funds is null, don't iterate over it but still return object
+- `org/DataManager.java:createFund`: Check for nullity before making request
+- `org/DataManager.java:getContributorName`: Check for id nullity before making request
 ### what to add here: description of any bugs that you found and fixed 
 
 ## Task 1.3. Organization (Java) App display total donations for fund
