@@ -64,6 +64,7 @@ public class UserInterface {
 	public void displayFund(int fundNumber) {
 		
 		Fund fund = org.getFunds().get(fundNumber - 1);
+		long totalDonation = 0;
 		
 		System.out.println("\n\n");
 		System.out.println("Here is information about this fund:");
@@ -75,8 +76,11 @@ public class UserInterface {
 		System.out.println("Number of donations: " + donations.size());
 		for (Donation donation : donations) {
 			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on " + donation.getDate());
+			totalDonation += donation.getAmount();
 		}
 	
+		long target = fund.getTarget();
+		System.out.println("Total donation amount: $" + totalDonation + " (" + (totalDonation/target)*100 + "% of target)");
 		
 		System.out.println("Press the Enter key to go back to the listing of funds");
 		in.nextLine();
