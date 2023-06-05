@@ -7,6 +7,10 @@ We would like to get the following additional tasks graded: 1.4, 1.5, xxx
 ## Task 1.1. Organization (Java) App testing
 
 ## Task 1.2. Organization (Java) App debugging
+Bugs
+- `org/DataManger.java:42`: misspelling of description
+- JSON parses decimals as doubles not floats. For ease, the `Fund` class is altered to use doubles throughout the codebase
+- 
 ### what to add here: description of any bugs that you found and fixed 
 
 ## Task 1.3. Organization (Java) App display total donations for fund
