@@ -93,11 +93,17 @@ public class UserInterface {
 		do {
 			try {
 				target = in.nextInt();
-				prompt = false;
+				
+				if (target > 0) {
+					prompt = false;
+				} else {
+					// request data re-entry due to invalid value
+					System.out.println("Re-enter a target value as a positive whole number:");					
+				}
 				in.nextLine();
 			} catch (InputMismatchException ime) {
 				// request data re-entry due to invalid value
-				System.out.println("Re-enter a target value as a whole number:");
+				System.out.println("Re-enter a target value as a positive whole number:");
 				in.nextLine();
 			}
 		} while (prompt);
