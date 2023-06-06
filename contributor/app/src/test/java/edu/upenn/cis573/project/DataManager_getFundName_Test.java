@@ -6,6 +6,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class DataManager_getFundName_Test {
 
@@ -25,6 +26,46 @@ public class DataManager_getFundName_Test {
         assertEquals("Snoopy", name);
 
 
+    }
+
+    @Test
+    public void testNotFound() {
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"not found\"}";
+            }
+        });
+
+        String name = dm.getFundName("1");
+        assertNotNull(name);
+        assertEquals("Unknown fund", name);
+    }
+
+    @Test
+    public void testErrorOccurs_Query() {
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"error\", \"data\":\"err\"}";
+            }
+        });
+
+        String name = dm.getFundName("1");
+        assertNull(name);
+    }
+
+    @Test
+    public void testErrorOccurs_Exception() {
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return null;
+            }
+        });
+
+        String name = dm.getFundName("1");
+        assertNull(name);
     }
 
 }

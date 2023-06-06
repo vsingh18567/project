@@ -4,10 +4,10 @@ public class Fund {
 
     private String id;
     private String name;
-    private long target;
-    private long totalDonations;
+    private double target;
+    private double totalDonations;
 
-    public Fund(String id, String name, long target, long totalDonations) {
+    public Fund(String id, String name, double target, double totalDonations) {
         this.id = id;
         this.name = name;
         this.target = target;
@@ -22,11 +22,11 @@ public class Fund {
         return name;
     }
 
-    public long getTarget() {
+    public double getTarget() {
         return target;
     }
 
-    public long getTotalDonations() {
+    public double getTotalDonations() {
         return totalDonations;
     }
 }

@@ -42,8 +42,8 @@ public class DataManager {
                 String email = (String)data.get("email");
                 String creditCardNumber = (String)data.get("creditCardNumber");
                 String creditCardCVV = (String)data.get("creditCardCVV");
-                String creditCardExpiryMonth = ((Integer)data.get("creditCardExpiryMonth")).toString();
-                String creditCardExpiryYear = ((Integer)data.get("creditCardExpiryYear")).toString();
+                String creditCardExpiryMonth = (String)data.get("creditCardExpiryMonth");
+                String creditCardExpiryYear = (String)data.get("creditCardExpiryYear");
                 String creditCardPostCode = (String)data.get("creditCardPostCode");
 
                 Contributor contributor = new Contributor(id, name, email, creditCardNumber, creditCardCVV, creditCardExpiryYear, creditCardExpiryMonth, creditCardPostCode);
@@ -58,7 +58,7 @@ public class DataManager {
 
                     String fund = getFundName((String)jsonDonation.get("fund"));
                     String date = (String)jsonDonation.get("date");
-                    long amount = (Integer)jsonDonation.get("amount");
+                    double amount = Double.parseDouble((String)jsonDonation.get("amount"));
 
                     Donation donation = new Donation(fund, name, amount, date);
                     donationList.add(donation);
@@ -99,7 +99,12 @@ public class DataManager {
                 String name = (String)json.get("data");
                 return name;
             }
-            else return "Unknown Fund";
+            else if (status.equals("not found")) {
+                return "Unknown fund";
+            } else {
+                return null;
+            }
+//            else return "Unknown fund";
 
         }
         catch (Exception e) {
@@ -146,8 +151,8 @@ public class DataManager {
 
                         id = (String)fundObj.get("_id");
                         name = (String)fundObj.get("name");
-                        long target = (Integer)fundObj.get("target");
-                        long totalDonations = (Integer)fundObj.get("totalDonations");
+                        double target = Double.parseDouble((String)fundObj.get("target"));
+                        double totalDonations = Double.parseDouble((String)fundObj.get("totalDonations"));
 
                         Fund fund = new Fund(id, name, target, totalDonations);
 

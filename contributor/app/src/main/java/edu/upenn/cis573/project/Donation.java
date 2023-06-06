@@ -6,10 +6,10 @@ public class Donation implements Serializable {
 
     private String fundName;
     private String contributorName;
-    private long amount;
+    private double amount;
     private String date;
 
-    public Donation(String fundName, String contributorName, long amount, String date) {
+    public Donation(String fundName, String contributorName, double amount, String date) {
         this.fundName = fundName;
         this.contributorName = contributorName;
         this.amount = amount;
@@ -24,7 +24,7 @@ public class Donation implements Serializable {
         return contributorName;
     }
 
-    public long getAmount() {
+    public double getAmount() {
         return amount;
     }
 
