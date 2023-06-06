@@ -1,5 +1,5 @@
 # Additional Tasks
-We would like to get the following additional tasks graded: 1.4, 1.5, xxx
+We would like to get the following additional tasks graded: 1.4, 1.5, 1.7, 1.9.
 
 # Completed Tasks
 
