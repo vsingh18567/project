@@ -21,6 +21,8 @@ To display total donations, the displayFund(fundNumber) method was adjusted. Wit
 
 ## Task 1.4. Contributor (Android) App testing and debugging
 ### what to add here: description of any bugs that you found and fixed 
+Bugs
+- `contributor/DataManger.java:getFundName`: typo in fund-not-found case
 
 ## Task 1.5. Contributor (Android) App display total donations
 To display total donations, the onResume() method in the ViewDonationsActivity class was adjusted. Within the for-loop that adds all donations to the donations array, the amount of each donation is now also being added to a new variable totalDonations. totalDonations is then added to the donations array in order to display it as another entry in the ListView.
