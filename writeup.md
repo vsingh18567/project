@@ -25,15 +25,24 @@ To display total donations, the displayFund(fundNumber) method was adjusted. Wit
 ## Task 1.5. Contributor (Android) App display total donations
 To display total donations, the onResume() method in the ViewDonationsActivity class was adjusted. Within the for-loop that adds all donations to the donations array, the amount of each donation is now also being added to a new variable totalDonations. totalDonations is then added to the donations array in order to display it as another entry in the ListView.
 
-## Task 
+## Task 1.7. Organization (Java) App input error handling
+The following bulletproofing measures were implemented in torder to prevent crashes in the org/UserInterface.java start() and createFund() methods. For all invalid entries, the user is prompted to re-enter a valid input.
 
-## Task 
+start()method:
+- restrict input to a listed fund number or 0 to create a new fund.
+
+createFund() method:
+- disallow empty string or entries with only space characters for fund name and fund description
+- restrict fund target to positive whole numbers 
+
+## Task 1.9 - Date formatting
+A new method, getDateFormatted(), was added to the org/Donation.java class to return a string with "MMM d, yyyy" format. This formatted date string was then used in the displayFund() routine, in lieu of the default UTC format, to display donation date in the fund donations list.
 
 ### what to add here - optional: Any known bugs or other issues with the tasks you attempted in this phase.
 ### what to add here - optional: Instructions on how to start each app, if you changed anything from the original version of the code, e.g. the name of the Java main class or JavaScript entry point, arguments to the programs, etc. If you did not change anything, you may omit this.
 
 # Contributions of team members
-Vikram completed tasks 1.1 and 1.2, Lisa completed tasks 1.3 and 1.5, Grace completed task 1.4 and Michelle completed tasks xxx
+Vikram completed tasks 1.1 and 1.2, Lisa completed tasks 1.3 and 1.5, Grace completed task 1.4 and Michelle completed tasks 1.7 and 1.9.
 Vikram also took the lead in creating the github repo, Michelle in setting up a first team meeting. 
 For the write-up, everyone focused on the tasks they completed.
 
