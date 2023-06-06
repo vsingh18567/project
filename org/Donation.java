@@ -1,3 +1,7 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Formatter;
+
 public class Donation {
 	
 	private String fundId;
@@ -28,6 +32,11 @@ public class Donation {
 		return date;
 	}
 	
-	
-
+	public String getDateFormatted() {
+		LocalDate temp = LocalDate.parse(date.substring(0, 10));
+		
+		DateTimeFormatter f = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+		
+		return temp.format(f);
+	}
 }
