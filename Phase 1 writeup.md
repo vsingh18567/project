@@ -2,9 +2,9 @@
 We would like to get the following additional tasks graded: 1.4, 1.5, xxx
 
 # Completed Tasks
-### what to add here: For each task you completed in this phase (Required or Additional), a brief description of the changes you made to the provided code, e.g. the names of any classes or methods that were changed, new methods that were created, etc.
 
 ## Task 1.1. Organization (Java) App testing
+Added tests to DataManager_attemptLogin_Test, DataManager_createFund_Test, and DataManager_getContributorName_Test.
 
 ## Task 1.2. Organization (Java) App debugging
 Bugs
@@ -45,8 +45,6 @@ createFund() method:
 ## Task 1.9 - Date formatting
 A new method, getDateFormatted(), was added to the org/Donation.java class to return a string with "MMM d, yyyy" format. This formatted date string was then used in the displayFund() routine, in lieu of the default UTC format, to display donation date in the fund donations list.
 
-### what to add here - optional: Any known bugs or other issues with the tasks you attempted in this phase.
-### what to add here - optional: Instructions on how to start each app, if you changed anything from the original version of the code, e.g. the name of the Java main class or JavaScript entry point, arguments to the programs, etc. If you did not change anything, you may omit this.
 
 # Contributions of team members
 Vikram completed tasks 1.1 and 1.2, Lisa completed tasks 1.3 and 1.5, Grace completed task 1.4 and Michelle completed tasks 1.7 and 1.9.
