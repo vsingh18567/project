@@ -31,16 +31,22 @@ public class ViewDonationsActivity extends AppCompatActivity {
 
         messageField.setText("Here are " + contributor.getName() + "'s donations:");
 
-        String[] donations = new String[contributor.getDonations().size()];
+        String[] donations = new String[contributor.getDonations().size() + 1];
 
         int index = 0;
+        long totalDonations = 0;
 
         for (Donation d : contributor.getDonations()) {
 
             //Log.v("donation", d.toString());
             donations[index++] = d.toString();
+            totalDonations += d.getAmount();
+
 
         }
+
+        donations[index] = "Total Donations: $" + totalDonations;
+
 
         ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.listview, donations);
 
