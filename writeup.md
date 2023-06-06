@@ -20,10 +20,15 @@ Bugs
 To display total donations, the displayFund(fundNumber) method was adjusted. Within the for-loop that prints out each donation, the amount of each donation is now also being added to a new variable totalDonation. The amount is then divided by the value of fund.getTarget() to get the percentage of target that has been reached.  
 
 ## Task 1.4. Contributor (Android) App testing and debugging
-### what to add here: description of any bugs that you found and fixed 
 Bugs
 - `contributor/DataManger.java:getFundName`: typo in fund-not-found case
 - `contributor/DataManger.java:getFundName`: when query returns status 'error', consider it as an error occuring and return null for the method rather than 'Unknown fund'
+- JSON stores Number data types as 64-bit floating points. As such, changed some object fields to doubles so as to minimize accuracy loss. Total changes:
+  - `contributor/Donation.java`: Changed amount from long to double.
+  - `contributor/Fund.java`: Changed target and totalDonations from long to double.
+  - `contributor/DataManager.java:attemptLogin`: Adjusted JSON parsing to accomodate above changes.
+  - `contributor/DataManager.java:attemptLogin`: Fixed JSON parsing of creditCardExpiryMonth/Year so it is now parsed and kept as String, rather than casting to Integer.
+  - `contributor/DataManager.java:getAllOrganizations`: Adjusted JSON parsing to accomodate above changes.
 
 ## Task 1.5. Contributor (Android) App display total donations
 To display total donations, the onResume() method in the ViewDonationsActivity class was adjusted. Within the for-loop that adds all donations to the donations array, the amount of each donation is now also being added to a new variable totalDonations. totalDonations is then added to the donations array in order to display it as another entry in the ListView.
