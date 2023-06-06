@@ -42,8 +42,8 @@ public class DataManager {
                 String email = (String)data.get("email");
                 String creditCardNumber = (String)data.get("creditCardNumber");
                 String creditCardCVV = (String)data.get("creditCardCVV");
-                String creditCardExpiryMonth = (String)data.get("creditCardExpiryMonth");
-                String creditCardExpiryYear = (String)data.get("creditCardExpiryYear");
+                String creditCardExpiryMonth = ((Integer)data.get("creditCardExpiryMonth")).toString();
+                String creditCardExpiryYear = ((Integer)data.get("creditCardExpiryYear")).toString();
                 String creditCardPostCode = (String)data.get("creditCardPostCode");
 
                 Contributor contributor = new Contributor(id, name, email, creditCardNumber, creditCardCVV, creditCardExpiryYear, creditCardExpiryMonth, creditCardPostCode);

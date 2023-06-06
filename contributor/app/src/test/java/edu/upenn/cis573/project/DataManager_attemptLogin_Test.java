@@ -34,8 +34,8 @@ public class DataManager_attemptLogin_Test {
                         "\"_id\":\"" + id + "\",\"login\":\"user\", \"password\":\"pw\"," +
                         "\"name\":\"" + name + "\",\"email\":\"" + email + "\"," +
                         "\"creditCardNumber\":\"" + ccn + "\",\"creditCardCVV\":\"" + cvv + "\"," +
-                        "\"creditCardExpiryMonth\":\"" + ccem + "\"," +
-                        "\"creditCardExpiryYear\":\"" + ccey + "\"," +
+                        "\"creditCardExpiryMonth\":" + ccem + "," +
+                        "\"creditCardExpiryYear\":" + ccey + "," +
                         "\"creditCardPostCode\":\"" + ccpc + "\"," +
                         "\"donations\":[{" +
                         "\"contributor\":\"" + name + "\",\"fund\":\"" + fund + "\"," +

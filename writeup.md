@@ -27,7 +27,6 @@ Bugs
   - `contributor/Donation.java`: Changed amount from long to double.
   - `contributor/Fund.java`: Changed target and totalDonations from long to double.
   - `contributor/DataManager.java:attemptLogin`: Adjusted JSON parsing to accomodate above changes.
-  - `contributor/DataManager.java:attemptLogin`: Fixed JSON parsing of creditCardExpiryMonth/Year so it is now parsed and kept as String, rather than casting to Integer.
   - `contributor/DataManager.java:getAllOrganizations`: Adjusted JSON parsing to accomodate above changes.
 
 ## Task 1.5. Contributor (Android) App display total donations
