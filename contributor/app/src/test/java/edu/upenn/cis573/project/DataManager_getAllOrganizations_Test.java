@@ -16,15 +16,17 @@ public class DataManager_getAllOrganizations_Test {
         String fund_id = "0";
         String name = "n";
         String fund_name = "n";
-        double target = 200;
-        double total = 100;
+//        double target = 200;
+//        double total = 100;
+        int target = 200;
+        int total = 100;
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
                 return "{\"status\":\"success\",\"data\":[" +
                         "{\"_id\":\"" + org_id + "\",\"name\":\"" + name + "\",\"funds\":[{" +
                         "\"_id\":\"" + fund_id + "\",\"name\":\"" + fund_name + "\"," +
-                        "\"target\":\"" + target + "\",\"totalDonations\":\"" + total + "\"}]}" +
+                        "\"target\":" + target + ",\"totalDonations\":" + total + "}]}" +
                         "]}";
             }
         });

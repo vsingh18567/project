@@ -58,7 +58,7 @@ public class DataManager {
 
                     String fund = getFundName((String)jsonDonation.get("fund"));
                     String date = (String)jsonDonation.get("date");
-                    double amount = Double.parseDouble((String)jsonDonation.get("amount"));
+                    double amount = Double.parseDouble(jsonDonation.get("amount").toString());
 
                     Donation donation = new Donation(fund, name, amount, date);
                     donationList.add(donation);
@@ -151,8 +151,8 @@ public class DataManager {
 
                         id = (String)fundObj.get("_id");
                         name = (String)fundObj.get("name");
-                        double target = Double.parseDouble((String)fundObj.get("target"));
-                        double totalDonations = Double.parseDouble((String)fundObj.get("totalDonations"));
+                        double target = Double.parseDouble(fundObj.get("target").toString());
+                        double totalDonations = Double.parseDouble(fundObj.get("totalDonations").toString());
 
                         Fund fund = new Fund(id, name, target, totalDonations);
 

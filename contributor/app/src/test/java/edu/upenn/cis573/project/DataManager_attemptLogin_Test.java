@@ -19,6 +19,7 @@ public class DataManager_attemptLogin_Test {
         String contributorObj;
         String id, name, email, ccn, cvv, ccem, ccey,ccpc, fund, date;
         double amt;
+//        int amt;
         id = "0";
         name = "c";
         email = "c@email.com";
@@ -39,7 +40,7 @@ public class DataManager_attemptLogin_Test {
                         "\"creditCardPostCode\":\"" + ccpc + "\"," +
                         "\"donations\":[{" +
                         "\"contributor\":\"" + name + "\",\"fund\":\"" + fund + "\"," +
-                        "\"date\":\"" + date + "\",\"amount\":\"" + amt + "\"" +
+                        "\"date\":\"" + date + "\",\"amount\":" + amt + "" +
                         "}]" +
                         "}" +
                         "}";

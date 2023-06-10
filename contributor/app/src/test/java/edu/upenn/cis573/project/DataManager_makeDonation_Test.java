@@ -14,7 +14,7 @@ public class DataManager_makeDonation_Test {
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"success\",\"data\":{\"donation\":\"donationstuff\"}}";
+                return "{\"status\":\"success\",\"data\":{\"donationfield\":\"donationstuff\"}}";
             }
         });
         // according to the API, the only time status = success is if the donation is successful
