@@ -29,12 +29,14 @@ public class Donation {
 	}
 
 	public String getDate() {
+		
 		return date;
 	}
 	
 	public String getDateFormatted() {
 		LocalDate temp = LocalDate.parse(date.substring(0, 10));
 		
+		// Format date (e.g. July 1, 2023) to use in lieu of default UTC format
 		DateTimeFormatter f = DateTimeFormatter.ofPattern("MMMM d, yyyy");
 		
 		return temp.format(f);
