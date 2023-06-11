@@ -23,7 +23,7 @@ public class DataManager {
 		if (client == null) {
 			throw new IllegalStateException();
 		}
-		String response = client.makeRequest("/findOrgByLoginAndPassword", map);
+		String response = client.makeRequest(resource, map);
 		if (response == null) {
 			throw new IllegalStateException();
 		}
