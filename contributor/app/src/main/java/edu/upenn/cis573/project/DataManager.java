@@ -2,11 +2,14 @@ package edu.upenn.cis573.project;
 
 import android.util.Log;
 
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -26,12 +29,22 @@ public class DataManager {
      */
     public Contributor attemptLogin(String login, String password) {
 
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("login", login);
-            map.put("password", password);
-            String response = client.makeRequest("/findContributorByLoginAndPassword", map);
+        if (client == null) {
+            throw new IllegalStateException("Client cannot be null!!");
+        }
+        if (login == null || password == null) {
+            throw new IllegalArgumentException("Arguments cannot be null!");
+        }
 
+        Map<String, Object> map = new HashMap<>();
+        map.put("login", login);
+        map.put("password", password);
+        String response = client.makeRequest("/findContributorByLoginAndPassword", map);
+        if (response == null) {
+            throw new IllegalStateException("Client did not return valid response");
+        }
+
+        try {
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
 
@@ -69,12 +82,17 @@ public class DataManager {
 
                 return contributor;
 
+            } else if (status.equals("error")) {
+                throw new IllegalStateException("Client returned error");
             }
 
             return null;
 
-        }
-        catch (Exception e) {
+        } catch (JSONException je) {
+            throw new IllegalStateException("Client returned Malformed JSON");
+        } catch (IllegalStateException ie) {
+            throw ie;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -86,28 +104,41 @@ public class DataManager {
      */
     public String getFundName(String id) {
 
+        if (client == null) {
+            throw new IllegalStateException("Client cannot be null!!");
+        }
+        if (id == null) {
+            throw new IllegalArgumentException("Arguments cannot be null!");
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        String response = client.makeRequest("/findFundNameById", map);
+        if (response == null) {
+            throw new IllegalStateException("Client did not return valid response");
+        }
+
         try {
-
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", id);
-            String response = client.makeRequest("/findFundNameById", map);
-
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
 
             if (status.equals("success")) {
                 String name = (String)json.get("data");
                 return name;
-            }
-            else if (status.equals("not found")) {
+            } else if (status.equals("not found")) {
                 return "Unknown fund";
+            } else if (status.equals("error")) {
+                throw new IllegalStateException("Client returned error");
             } else {
                 return null;
             }
 //            else return "Unknown fund";
 
-        }
-        catch (Exception e) {
+        } catch (JSONException je) {
+            throw new IllegalStateException("Client returned Malformed JSON");
+        } catch (IllegalStateException ie) {
+            throw ie;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -119,10 +150,16 @@ public class DataManager {
      * @return a List of Organization objects if successful, null otherwise
      */
     public List<Organization> getAllOrganizations() {
-        try {
-            Map<String, Object> map = new HashMap<>();
-            String response = client.makeRequest("/allOrgs", map);
+        if (client == null) {
+            throw new IllegalStateException("Client cannot be null!!");
+        }
+        Map<String, Object> map = new HashMap<>();
+        String response = client.makeRequest("/allOrgs", map);
+        if (response == null) {
+            throw new IllegalStateException("Client did not return valid response");
+        }
 
+        try {
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
 
@@ -168,12 +205,17 @@ public class DataManager {
 
                 return organizations;
 
+            } else if (status.equals("error")) {
+                throw new IllegalStateException("Client returned error");
             }
 
             return null;
 
-        }
-        catch (Exception e) {
+        } catch (JSONException je) {
+            throw new IllegalStateException("Client returned Malformed JSON");
+        } catch (IllegalStateException ie) {
+            throw ie;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -186,21 +228,38 @@ public class DataManager {
      */
     public boolean makeDonation(String contributorId, String fundId, String amount) {
 
-        try {
+        if (client == null) {
+            throw new IllegalStateException("Client cannot be null!!");
+        }
+        if (contributorId == null || fundId == null || amount == null) {
+            throw new IllegalArgumentException("Arguments cannot be null!");
+        }
+        if (!amount.matches("^\\d*.?\\d+$")) {
+            throw new IllegalArgumentException("Amount must be numeric!");
+        }
 
-            Map<String, Object> map = new HashMap<>();
-            map.put("contributor", contributorId);
-            map.put("fund", fundId);
-            map.put("amount", amount);
-            String response = client.makeRequest("/makeDonation", map);
-            
+        Map<String, Object> map = new HashMap<>();
+        map.put("contributor", contributorId);
+        map.put("fund", fundId);
+        map.put("amount", amount);
+        String response = client.makeRequest("/makeDonation", map);
+        if (response == null) {
+            throw new IllegalStateException("Client did not return valid response");
+        }
+
+        try {
             JSONObject json = new JSONObject(response);
             String status = (String)json.get("status");
-
+            if (status.equals("error")) {
+                throw new IllegalStateException("Client returned error");
+            }
             return status.equals("success");
 
-        }
-        catch (Exception e) {
+        } catch (JSONException je) {
+            throw new IllegalStateException("Client returned Malformed JSON");
+        } catch (IllegalStateException ie) {
+            throw ie;
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

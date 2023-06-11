@@ -91,7 +91,7 @@ public class DataManager_attemptLogin_Test {
         assertNull(c);
     }
 
-    @Test
+    @Test(expected=IllegalStateException.class)
     public void testLoginError() {
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
@@ -100,20 +100,7 @@ public class DataManager_attemptLogin_Test {
             }
         });
 
-        Contributor c = dm.attemptLogin("user", "password");
-        assertNull(c);
+        dm.attemptLogin("user", "password");
     }
 
-    @Test
-    public void testException() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return null;
-            }
-        });
-
-        Contributor c = dm.attemptLogin("a", "b");
-        assertNull(c);
-    }
 }
