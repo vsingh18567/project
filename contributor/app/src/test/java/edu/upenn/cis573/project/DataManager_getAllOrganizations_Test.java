@@ -49,7 +49,7 @@ public class DataManager_getAllOrganizations_Test {
 
     }
 
-    @Test
+    @Test(expected=IllegalStateException.class)
     public void testErrorInQuery() {
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
@@ -58,21 +58,7 @@ public class DataManager_getAllOrganizations_Test {
             }
         });
 
-        List<Organization> organizationList = dm.getAllOrganizations();
-        assertNull(organizationList);
-    }
-
-    @Test
-    public void testExceptionInMethod() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return null;
-            }
-        });
-
-        List<Organization> organizationList = dm.getAllOrganizations();
-        assertNull(organizationList);
+        dm.getAllOrganizations();
     }
 
 

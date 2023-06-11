@@ -21,7 +21,7 @@ public class DataManager_makeDonation_Test {
         assertTrue(dm.makeDonation("0", "1", "100.0"));
     }
 
-    @Test
+    @Test(expected=IllegalStateException.class)
     public void testNotSuccess() {
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
@@ -30,18 +30,7 @@ public class DataManager_makeDonation_Test {
             }
         });
 
-        assertFalse(dm.makeDonation("0", "1", "100.0"));
+        dm.makeDonation("0", "1", "100.0");
     }
 
-    @Test
-    public void testExceptionIsFalse() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return null;
-            }
-        });
-
-        assertFalse(dm.makeDonation("0", "1", "100.0"));
-    }
 }

@@ -42,7 +42,7 @@ public class DataManager_getFundName_Test {
         assertEquals("Unknown fund", name);
     }
 
-    @Test
+    @Test(expected=IllegalStateException.class)
     public void testErrorOccurs_Query() {
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
@@ -51,21 +51,7 @@ public class DataManager_getFundName_Test {
             }
         });
 
-        String name = dm.getFundName("1");
-        assertNull(name);
-    }
-
-    @Test
-    public void testErrorOccurs_Exception() {
-        DataManager dm = new DataManager(new WebClient(null, 0) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return null;
-            }
-        });
-
-        String name = dm.getFundName("1");
-        assertNull(name);
+        dm.getFundName("1");
     }
 
 }
