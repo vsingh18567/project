@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class DataManager_attemptLogin_Test {
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testFailure() {
 
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
@@ -16,7 +16,7 @@ public class DataManager_attemptLogin_Test {
                 return "{\"status\":\"failure\"}";
             }
         });
-        assertNull(dm.attemptLogin("hi", "there"));
+        dm.attemptLogin("hi", "there");
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DataManager_attemptLogin_Test {
 
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testException() {
         DataManager dm = new DataManager(new WebClient("localhost", 3002) {
 
@@ -77,7 +77,6 @@ public class DataManager_attemptLogin_Test {
 
         Organization org = dm.attemptLogin("name", "pass");
 
-        assertNull(org);
 
     }
 

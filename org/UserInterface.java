@@ -109,8 +109,15 @@ public class UserInterface {
 		} while (prompt);
 
 		// create new fund with above information
-		Fund fund = dataManager.createFund(org.getId(), name, description, target);
-		org.getFunds().add(fund);
+		try {
+			Fund fund = dataManager.createFund(org.getId(), name, description, target);
+			org.getFunds().add(fund);
+		} catch (Exception e) {
+			System.out.println("Error in creating fund. Would you like to retry operation? [y/n]");
+			if (in.nextLine().equals("y")) {
+				createFund();
+			}
+		}
 	}
 
 	public void displayFund(int fundNumber) {
@@ -138,16 +145,27 @@ public class UserInterface {
 	public static void main(String[] args) {
 
 		DataManager ds = new DataManager(new WebClient("localhost", 3001));
+		Scanner in = new Scanner(System.in);
 
 		String login = args[0];
 		String password = args[1];
-
-		Organization org = ds.attemptLogin(login, password);
+		Organization org = null;
+		boolean retry = true;
+		while (retry) {
+			try {
+				org = ds.attemptLogin(login, password);
+				retry = false;
+			} catch (Exception e) {
+				System.out.println("Error in logging in. Would you like to retry operation? [y/n]");
+				if (!in.nextLine().equals("y")) {
+					retry = false;
+				}
+			}
+		}
 
 		if (org == null) {
 			System.out.println("Login failed.");
 		} else {
-
 			UserInterface ui = new UserInterface(ds, org);
 
 			ui.start();

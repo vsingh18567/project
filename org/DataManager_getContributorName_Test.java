@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class DataManager_getContributorName_Test {
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testFailure() {
 
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
@@ -16,10 +16,10 @@ public class DataManager_getContributorName_Test {
                 return "{\"status\":\"failure\"}";
             }
         });
-        assertNull(dm.getContributorName("test"));
+        dm.getContributorName("test");
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testNoStatus() {
 
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
@@ -28,7 +28,7 @@ public class DataManager_getContributorName_Test {
                 return "{}";
             }
         });
-        assertNull(dm.getContributorName("test"));
+        dm.getContributorName("test");
     }
 
     @Test
