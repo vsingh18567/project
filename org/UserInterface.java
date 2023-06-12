@@ -162,7 +162,12 @@ public class UserInterface {
 				retry = false;
 			} catch (Exception e) {
 				System.out.println("Error in logging in. Would you like to retry operation? [y/n]");
-				if (!in.nextLine().equals("y")) {
+				if (in.nextLine().equals("y")) {
+					System.out.println("Please re-enter your login: ");
+					login = in.nextLine();
+					System.out.println("Please re-enter your password: ");
+					password = in.nextLine();
+				} else {
 					retry = false;
 				}
 			}

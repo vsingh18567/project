@@ -71,7 +71,7 @@ public class DataManager {
 					fundId = (String)fund.get("_id");
 					name = (String)fund.get("name");
 					description = (String)fund.get("description");
-					long target = (long) fund.get("target");
+					long target = (Long) fund.get("target");
 
 					Fund newFund = new Fund(fundId, name, description, target);
 					JSONArray donations = (JSONArray)fund.get("donations");
