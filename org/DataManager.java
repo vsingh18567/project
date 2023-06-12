@@ -71,7 +71,7 @@ public class DataManager {
 					fundId = (String)fund.get("_id");
 					name = (String)fund.get("name");
 					description = (String)fund.get("description");
-					Double target = (Double) fund.get("target");
+					long target = (long) fund.get("target");
 
 					Fund newFund = new Fund(fundId, name, description, target);
 					JSONArray donations = (JSONArray)fund.get("donations");
@@ -140,7 +140,7 @@ public class DataManager {
 	 * This method creates a new fund in the database using the /createFund endpoint in the API
 	 * @return a new Fund object if successful; null if unsuccessful
 	 */
-	public Fund createFund(String orgId, String name, String description, double target) {
+	public Fund createFund(String orgId, String name, String description, long target) {
 
 		if (orgId == null || name == null || description == null) {throw new IllegalArgumentException();}
 		Map<String, Object> map = new HashMap<>();

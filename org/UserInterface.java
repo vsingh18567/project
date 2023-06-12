@@ -123,12 +123,14 @@ public class UserInterface {
 	public void displayFund(int fundNumber) {
 
 		Fund fund = org.getFunds().get(fundNumber - 1);
+		long totalDonation = 0;
+		long target = fund.getTarget();
 
 		System.out.println("\n\n");
 		System.out.println("Here is information about this fund:");
 		System.out.println("Name: " + fund.getName());
 		System.out.println("Description: " + fund.getDescription());
-		System.out.println("Target: $" + fund.getTarget());
+		System.out.println("Target: $" + target);
 
 		List<Donation> donations = fund.getDonations();
 		System.out.println("Number of donations: " + donations.size());
@@ -136,7 +138,10 @@ public class UserInterface {
 			// print donation dates in display format (e.g., June 18, 2021)
 			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on "
 					+ donation.getDateFormatted());
+			totalDonation += donation.getAmount();
 		}
+
+		System.out.println("Total donation amount: $" + totalDonation + " (" + (totalDonation/target)*100 + "% of target)");
 
 		System.out.println("Press the Enter key to go back to the listing of funds");
 		in.nextLine();
@@ -163,6 +168,7 @@ public class UserInterface {
 			}
 		}
 
+
 		if (org == null) {
 			System.out.println("Login failed.");
 		} else {
@@ -171,6 +177,7 @@ public class UserInterface {
 			ui.start();
 
 		}
+		in.close();
 	}
 	
 }

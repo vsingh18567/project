@@ -75,7 +75,7 @@ public class DataManager_attemptLogin_Test {
 
         });;
 
-        Organization org = dm.attemptLogin("name", "pass");
+        dm.attemptLogin("name", "pass");
 
 
     }
