@@ -1,5 +1,7 @@
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -7,10 +9,12 @@ public class UserInterface {
 	private DataManager dataManager;
 	private Organization org;
 	private Scanner in = new Scanner(System.in);
+	private Map<Integer, String> aggDonationsFundMap;
 
 	public UserInterface(DataManager dataManager, Organization org) {
 		this.dataManager = dataManager;
 		this.org = org;
+		aggDonationsFundMap = new HashMap<>();
 	}
 
 	public void start() {
@@ -120,10 +124,29 @@ public class UserInterface {
 		}
 	}
 
+	private String aggregateDonationsString(int fundNumber, List<Map.Entry<String, Long>> sortedDonations, Map<String, Integer> contributorNumDonations) {
+		if (!aggDonationsFundMap.containsKey(fundNumber)) {
+			StringBuilder result = new StringBuilder();
+			for (Map.Entry<String, Long> entry : sortedDonations) {
+				String contributorName = entry.getKey();
+				int numDonations = contributorNumDonations.get(contributorName);
+				long sumDonations = entry.getValue();
+				result.append(contributorName).append(", ")
+						.append(numDonations).append(" donations, $")
+						.append(sumDonations).append(" total")
+						.append("\n");
+			}
+			aggDonationsFundMap.put(fundNumber, result.toString());
+		}
+		return aggDonationsFundMap.get(fundNumber);
+		
+	}
+
 	public void displayFund(int fundNumber) {
 
 		Fund fund = org.getFunds().get(fundNumber - 1);
-		long totalDonation = 0;
+
+		long totalDonation = fund.getTotalDonation();
 		long target = fund.getTarget();
 
 		System.out.println("\n\n");
@@ -134,14 +157,26 @@ public class UserInterface {
 
 		List<Donation> donations = fund.getDonations();
 		System.out.println("Number of donations: " + donations.size());
-		for (Donation donation : donations) {
-			// print donation dates in display format (e.g., June 18, 2021)
-			System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on "
-					+ donation.getDateFormatted());
-			totalDonation += donation.getAmount();
+		System.out.println("Total donation amount: $" + totalDonation + " (" + (totalDonation/target)*100 + "% of target)");
+
+		System.out.println("\n" + //
+				"You can display donations in chronological order or by contributor." + "\n" + //
+				"Do you want to display donations in chronological order? y/n");
+		if (in.nextLine().equals("y")) {
+			System.out.println();
+			for (Donation donation : donations) {
+				// print donation dates in display format (e.g., June 18, 2021)
+				System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on "
+						+ donation.getDateFormatted());
+			}
 		}
 
-		System.out.println("Total donation amount: $" + totalDonation + " (" + (totalDonation/target)*100 + "% of target)");
+		System.out.println("\n" + //
+				"Do you want to display donations by contributor? y/n");
+		if (in.nextLine().equals("y")) {
+			System.out.println("\n" + aggregateDonationsString(fundNumber, fund.getContributorSumDonations(), fund.getContributorNumDonations()));
+		}
+		
 
 		System.out.println("Press the Enter key to go back to the listing of funds");
 		in.nextLine();
