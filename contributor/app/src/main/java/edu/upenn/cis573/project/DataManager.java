@@ -16,9 +16,11 @@ import org.json.JSONArray;
 public class DataManager {
 
     private WebClient client;
+    private Map<String, String> fundNameCache; // key = id, val = name
 
     public DataManager(WebClient client) {
         this.client = client;
+        fundNameCache = new HashMap<String, String>();
     }
 
 
@@ -69,7 +71,14 @@ public class DataManager {
 
                     JSONObject jsonDonation = donations.getJSONObject(i);
 
-                    String fund = getFundName((String)jsonDonation.get("fund"));
+                    String fund;
+                    String fundId = (String)jsonDonation.get("fund");
+                    if (fundNameCache.containsKey(fundId)) {
+                        fund = fundNameCache.get(fundId);
+                    } else {
+                        fund = getFundName(fundId);
+                        fundNameCache.put(fundId, fund);
+                    }
                     String date = (String)jsonDonation.get("date");
                     double amount = Double.parseDouble(jsonDonation.get("amount").toString());
 

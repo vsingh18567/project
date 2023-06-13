@@ -46,7 +46,6 @@ public class MakeDonationActivity extends AppCompatActivity {
             else {
                 selectedFund = new Fund("0", "This Organization has no Funds.", 0, 0);
             }
-            Toast.makeText(this, "we are currently trying onCreate", Toast.LENGTH_LONG).show();
 
             // setContentView(R.layout.activity_make_donation); // same result as running this line above
             final Spinner orgSpinner = findViewById(R.id.orgSpinner);
@@ -136,6 +135,7 @@ public class MakeDonationActivity extends AppCompatActivity {
         } catch (IllegalStateException ie) {
             // setContentView(R.layout.activity_main);
             Toast.makeText(this, "Organizations could not be fetched. Please check connection.", Toast.LENGTH_LONG).show();
+            // finish();
         } catch (Exception e) {
             // setContentView(R.layout.activity_menu);
             Toast.makeText(this, "An unexpected error occurred. Please try again.", Toast.LENGTH_LONG).show();
