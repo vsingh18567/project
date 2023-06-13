@@ -15,10 +15,14 @@ Created new aggregateDonationsString(int fundNumber, List<Map.Entry<String, Long
 Also re-added code to show total donation amount from last week's task 1.3 as it was overwritten in our previous submission. Created getTotalDonation() in Fund class that calculates total donations. 
 
 ## Task 2.4. Contributor App caching
-
+A cache named `fundNameCache` was added to `DataManager.java` as an instance variable, implemented as a HashMap with Strings for keys (ids) and values (names). Before every call to getFundName, we test to see if the `fundId` that was received from the JSON is already in the cache. If so, we skip calling getFundName and return the cached name. Otherwise, we call getFundName and if successful, add this information to the `fundNameCache`, so the API would not have be called in the next reference to this fund.
 
 ## Task 2.5. Contributor App defensive programming
+DataManager changes
+- Using the given robustness tests, each method in DataManager was altered to accomodate various cases such as inputs being null, critical variables being null, losing connection to the server, and invalid responses from the client. It was previously specified for the methods to return null if there were errors, but the updated specficiation given by the tests required that these errors were caught and to throw exceptions, so all DataManager methods were updated accordingly.
 
+DataManager Unit Test Changes
+- Due to the method specification previously saying that failed calls to the API should return null, previous unit tests included this in the expected output. In particular, old unit tests that raised an exception in the DataManager method were removed, because these test cases were identical to those the provided robustness tests, and other tests that returned an error message in JSON form were altered to fit the new specification.
 
 ## Task 2.8. Organization App logout/login
 UserInterface.java: 
