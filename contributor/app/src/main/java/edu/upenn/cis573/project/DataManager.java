@@ -206,6 +206,7 @@ public class DataManager {
                 return organizations;
 
             } else if (status.equals("error")) {
+                // if mongo is disconnected, JSON = error, MongoError
                 throw new IllegalStateException("Client returned error");
             }
 

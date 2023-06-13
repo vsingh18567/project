@@ -30,19 +30,23 @@ public class MainActivity extends AppCompatActivity {
         String password = passwordField.getText().toString();
 
 
-        contributor = dataManager.attemptLogin(login, password);
+        try {
+            contributor = dataManager.attemptLogin(login, password);
+            if (contributor == null) {
+                Toast.makeText(this, "Login failed! Please check your credentials.", Toast.LENGTH_LONG).show();
+                // occurs when user/pw are empty/wrong
+            } else {
 
-        if (contributor == null) {
+                Intent i = new Intent(this, MenuActivity.class);
 
-            Toast.makeText(this, "Login failed!", Toast.LENGTH_LONG).show();
-
-
-        } else {
-
-            Intent i = new Intent(this, MenuActivity.class);
-
-            startActivity(i);
+                startActivity(i);
+            }
+        } catch (IllegalStateException ise) {
+            Toast.makeText(this, "Login failed! Check connection and try again.", Toast.LENGTH_LONG).show();
+        } catch (IllegalArgumentException iae) {
+            Toast.makeText(this, "Login failed! Input error.", Toast.LENGTH_LONG).show();
         }
+
 
 
     }
