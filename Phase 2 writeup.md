@@ -4,10 +4,10 @@ We would like to get the following additional tasks graded: 2.4, 2.5, 2.8, 2.9.
 # Completed Tasks
 
 ## Task 2.1. Organization App caching
-
+A cache called `contributorNameCache` is implemented for `getContributorName` using a HashMap stored in the DataManager class. It is checked before making a client request. It only caches the results of successful calls to the web client.
 
 ## Task 2.2. Organization App defensive programming
-
+This required significant change to DataManager. Previously, errors resulted in functions returning `null` instead of erroring out. Changes have been made throughout `DataManager` to ensure all test cases pass. This work builds on the defensive programming that was already done in Phase 1. A wrapper called `makeRequestWrapper` was made over `client.makeRequest` that intertwines defensive programming into every client request. 
 
 ## Task 2.3. Organization App aggregate donations by contributor
 Within UserInterface.displayFund(int fundNumber) method allowed user to choose if they want to display donations in chronological order or by contributor. 
