@@ -10,7 +10,9 @@ We would like to get the following additional tasks graded: 2.4, 2.5, 2.8, 2.9.
 
 
 ## Task 2.3. Organization App aggregate donations by contributor
-
+Within UserInterface.displayFund(int fundNumber) method allowed user to choose if they want to display donations in chronological order or by contributor. 
+Created new aggregateDonationsString(int fundNumber, List<Map.Entry<String, Long>> sortedDonations, Map<String, Integer> contributorNumDonations) method in UserInterface that creates a string to be printed if donations by contributor is chosen. This method uses two new methods in Fund class, which are public Map<String, Integer> getContributorNumDonations(), which creates a map of contributorName and corresponding number of donations to this fund, and List<Map.Entry<String, Long>> getContributorSumDonations(), which creates a list of contributors and their corresponding total donation value sorted in descending order of donation value. Added private Map<Integer, String> aggDonationsFundMap to UserInterface to cache the results of aggregateDonationsString method to avoid having to re-compute the aggregate donations info for a fund that has been viewed previously.
+Also re-added code to show total donation amount from last week's task 1.3 as it was overwritten in our previous submission. Created getTotalDonation() in Fund class that calculates total donations. 
 
 ## Task 2.4. Contributor App caching
 
@@ -19,7 +21,8 @@ We would like to get the following additional tasks graded: 2.4, 2.5, 2.8, 2.9.
 
 
 ## Task 2.8. Organization App logout/login
-
+UserInterface.java: 
+created a new login(String login, String password) name that creates a new DataManager and uses given login name and password to attemptLogin. Let's user re-enter username and password if login fails. Adjusted UserInteface.start() to give user possibility to logout (by choosing option -1), and adjusted main method to use new login(String login, String password) method and give user option to log back in after logging out or end program.
 
 ## Task 2.9. Organization App all contributions
 
@@ -33,6 +36,9 @@ UserInterface.java
 
 Organization.java
   getFundById() - This method was added to facilitate retrieval of the fund name for a donation, using the fundId which is accessible on a Donation object.
+
+# Known bugs / issues
+Usage of Double / Long for fund target. Our Organization app works with a long variable for target, but the admin app allows inputting a float value, an exception might be thrown if someone uses the web app to add a new fund. If the Organization app is used for adding a new fund, the user is prompted to re-enter a valid positive whole number if a float value is entered for target.
 
 # Contributions of team members
 Vikram completed tasks 2.1 and 2.2, Lisa completed tasks 2.3 and 2.8 and fixed some previous bugs, Grace completed task 2.4 and 2.5 and Michelle completed tasks 2.9.
