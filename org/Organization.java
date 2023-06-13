@@ -36,5 +36,12 @@ public class Organization {
 		funds.add(fund);
 	}
 	
-
+    public Fund getFundById(String Id) {
+    	for (Fund f : funds) {
+    		if (f.getId().equals(Id)) {
+    			return f;
+    		}
+    	}
+    	return null;
+    }
 }

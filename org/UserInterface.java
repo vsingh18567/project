@@ -1,3 +1,7 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -18,9 +22,9 @@ public class UserInterface {
 	}
 
 	public void start() {
-
+		System.out.println("\nWelcome to the Organization App for " + org.getName() + ".");
 		while (true) {
-			System.out.println("\n\n");
+			System.out.println("\n");
 			if (org.getFunds().size() > 0) {
 				System.out.println("There are " + org.getFunds().size() + " funds in this organization:");
 
@@ -31,9 +35,11 @@ public class UserInterface {
 
 					count++;
 				}
-				System.out.println("Enter the fund number to see more information.");
+				System.out.println("\nEnter the fund number to see more information.");
 			}
 			System.out.println("Enter 0 to create a new fund");
+			
+			System.out.println("Enter $ to see all donations to this organization.");
 
 			int option = -1;
 
@@ -41,28 +47,80 @@ public class UserInterface {
 
 			do {
 				try {
-					option = in.nextInt();
+					if (in.hasNextInt()) {
+					option = in.nextInt();	
 
 					if (option >= 0 && option <= org.getFunds().size()) {
 						prompt = false;
+						in.nextLine();
 					} else {
 						// request data re-entry due to invalid integer value
-						System.out.println("Re-enter a listed fund number or 0 to create a new fund:");
+						System.out.println("Re-enter a listed fund number, $ to see all donations, or 0 to create a new fund:");
+						in.nextLine();
 					}
-					in.nextLine();
+					
+					} else if (in.next().equals("$")) {
+						    // assign -99 as the option for displaying all donations for the organization
+							option = -99;
+
+							prompt = false;
+					}
 				} catch (InputMismatchException ime) {
+					
 					// request data re-entry due to invalid data type
-					System.out.println("Re-enter a listed fund number or 0 to create a new fund:");
+					System.out.println("Re-enter a listed fund number, $ to see all donations, or 0 to create a new fund:");
 					in.nextLine();
 				}
 			} while (prompt);
 
 			if (option == 0) {
 				createFund();
+			} else if (option == -99) {
+				displayAllDonations();
 			} else {
 				displayFund(option);
 			}
 		}
+	}
+	
+	/*Comparator for sorting the donation list by donation date in descending order*/
+	public static Comparator<Donation> DonationDateComparator = new Comparator<Donation>() {
+
+		public int compare(Donation d1, Donation d2) {
+		   LocalDateTime date1 = LocalDateTime.parse(d1.getDate().substring(0, 19));
+		   LocalDateTime date2 = LocalDateTime.parse(d2.getDate().substring(0, 19));
+
+		   return date2.compareTo(date1);
+	    	}};
+
+	/*Display all donations for the organization*/    	
+	private void displayAllDonations() {
+		
+		ArrayList<Fund> funds = new ArrayList<>(org.getFunds());
+		ArrayList<Donation> donations = new ArrayList<>();
+		
+		for (Fund f : funds) {
+			ArrayList<Donation> fundDonations = new ArrayList<>(f.getDonations());
+			
+			for (Donation fd : fundDonations) {
+				donations.add(fd);
+			}
+		}
+		
+		donations.sort(DonationDateComparator);
+		System.out.println("Number of donations: " + donations.size());
+			for (Donation d : donations) {
+				Fund donationFund = org.getFundById(d.getFundId());
+				String donationFundName = "";
+				if (donationFund != null) {
+					donationFundName = donationFund.getName();
+				}
+				// display donation dates in display format (e.g., June 18, 2021)
+				System.out.println("* " + donationFundName + ": $" + d.getAmount() + " on "
+						+ d.getDateFormatted());
+		}
+		
+		in.nextLine();		
 	}
 
 	public void createFund() {
@@ -207,7 +265,6 @@ public class UserInterface {
 				}
 			}
 		}
-
 
 		if (org == null) {
 			System.out.println("Login failed.");
