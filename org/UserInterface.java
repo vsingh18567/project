@@ -1,4 +1,3 @@
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,28 +35,29 @@ public class UserInterface {
 					count++;
 				}
 				System.out.println("\nEnter the fund number to see more information.");
+				System.out.println("Enter $ to see all donations to this organization.");
 			}
 			System.out.println("Enter 0 to create a new fund");
+			System.out.println("Enter -1 to logout.");
 			
-			System.out.println("Enter $ to see all donations to this organization.");
 
-			int option = -1;
+			int option = -2;
 
 			boolean prompt = true;
 
 			do {
 				try {
 					if (in.hasNextInt()) {
-					option = in.nextInt();	
+						option = in.nextInt();	
 
-					if (option >= 0 && option <= org.getFunds().size()) {
-						prompt = false;
-						in.nextLine();
-					} else {
-						// request data re-entry due to invalid integer value
-						System.out.println("Re-enter a listed fund number, $ to see all donations, or 0 to create a new fund:");
-						in.nextLine();
-					}
+						if (option >= -1 && option <= org.getFunds().size()) {
+							prompt = false;
+							in.nextLine();
+						} else {
+							// request data re-entry due to invalid integer value
+							System.out.println("Re-enter a listed fund number, $ to see all donations, -1 to logout, or 0 to create a new fund:");
+							in.nextLine();
+						}
 					
 					} else if (in.next().equals("$")) {
 						    // assign -99 as the option for displaying all donations for the organization
@@ -68,7 +68,7 @@ public class UserInterface {
 				} catch (InputMismatchException ime) {
 					
 					// request data re-entry due to invalid data type
-					System.out.println("Re-enter a listed fund number, $ to see all donations, or 0 to create a new fund:");
+					System.out.println("Re-enter a listed fund number, $ to see all donations, -1 to logout, or 0 to create a new fund:");
 					in.nextLine();
 				}
 			} while (prompt);
@@ -77,12 +77,15 @@ public class UserInterface {
 				createFund();
 			} else if (option == -99) {
 				displayAllDonations();
+			} else if (option == -1) {
+				break;
 			} else {
 				displayFund(option);
 			}
 		}
 	}
-	
+
+
 	/*Comparator for sorting the donation list by donation date in descending order*/
 	public static Comparator<Donation> DonationDateComparator = new Comparator<Donation>() {
 
@@ -91,7 +94,8 @@ public class UserInterface {
 		   LocalDateTime date2 = LocalDateTime.parse(d2.getDate().substring(0, 19));
 
 		   return date2.compareTo(date1);
-	    	}};
+	    }
+	};
 
 	/*Display all donations for the organization*/    	
 	private void displayAllDonations() {
@@ -240,18 +244,12 @@ public class UserInterface {
 		in.nextLine();
 	}
 
-	public static void main(String[] args) {
-
-		DataManager ds = new DataManager(new WebClient("localhost", 3001));
-		Scanner in = new Scanner(System.in);
-
-		String login = args[0];
-		String password = args[1];
-		Organization org = null;
+	public boolean login(String login, String password) {
+		dataManager = new DataManager(new WebClient("localhost", 3001));
 		boolean retry = true;
 		while (retry) {
 			try {
-				org = ds.attemptLogin(login, password);
+				org = dataManager.attemptLogin(login, password);
 				retry = false;
 			} catch (Exception e) {
 				System.out.println("Error in logging in. Would you like to retry operation? [y/n]");
@@ -265,15 +263,44 @@ public class UserInterface {
 				}
 			}
 		}
-
 		if (org == null) {
-			System.out.println("Login failed.");
+			return false;
 		} else {
-			UserInterface ui = new UserInterface(ds, org);
-
-			ui.start();
-
+			return true;
 		}
+		
+	}
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+
+		UserInterface ui = new UserInterface(null, null);
+		String login = args[0];
+		String password = args[1];
+
+		while (true) {
+
+			if (!ui.login(login, password)) {
+				System.out.println("Login failed.");
+				break;
+			} else {
+				ui.start();
+				System.out.println("Do you want to log back in? y/n");
+				if (in.nextLine().equals("y")) {
+					ui = new UserInterface(null, null);
+					System.out.println("Please provide your login: ");
+					login = in.nextLine();
+					System.out.println("Please provide your password: ");
+					password = in.nextLine();
+				} else {
+					System.out.println("Thanks for using Organization App.");
+					break;
+				}
+
+			}
+		}
+		
 		in.close();
 	}
 	
