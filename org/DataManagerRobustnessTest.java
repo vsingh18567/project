@@ -263,4 +263,106 @@ public class DataManagerRobustnessTest {
 		
 	}
 
+	/*
+	 * Tests for createOrg
+	 */
+	
+
+	@Test(expected=IllegalStateException.class)
+	public void testCreateOrg_WebClientIsNull() {
+
+		dm = new DataManager(null);
+		dm.createOrg("login", "password", "name", "description");
+		fail("DataManager.createOrg does not throw IllegalStateException when WebClient is null");
+		
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testCreateOrg_LoginIsNull() {
+
+		dm = new DataManager(new WebClient("localhost", 3001));
+		dm.createOrg(null, "password", "name", "description");
+		fail("DataManager.createOrg does not throw IllegalArgumentxception when login is null");
+		
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testCreateOrg_PasswordIsNull() {
+
+		dm = new DataManager(new WebClient("localhost", 3001));
+		dm.createOrg("login", null, "name", "description");
+		fail("DataManager.createOrg does not throw IllegalArgumentxception when password is null");
+		
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testCreateOrg_NameIsNull() {
+
+		dm = new DataManager(new WebClient("localhost", 3001));
+		dm.createOrg("login", "password", null, "description");
+		fail("DataManager.createOrg does not throw IllegalArgumentxception when name is null");
+		
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testCreateOrg_DescriptionIsNull() {
+
+		dm = new DataManager(new WebClient("localhost", 3001));
+		dm.createOrg("login", "password", "name", null);
+		fail("DataManager.createOrg does not throw IllegalArgumentxception when description is null");
+		
+	}
+
+	@Test(expected=IllegalStateException.class)
+	public void testCreateOrg_WebClientCannotConnectToServer() {
+
+		// this assumes no server is running on port 3002
+		dm = new DataManager(new WebClient("localhost", 3002));
+		dm.createOrg("login", "password", "name", "description");
+		fail("DataManager.createOrg does not throw IllegalStateException when WebClient cannot connect to server");
+		
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testCreateOrg_WebClientReturnsNull() {
+
+		dm = new DataManager(new WebClient("localhost", 3001) {
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return null;
+			}
+		});
+		dm.createOrg("login", "password", "name", "description");
+		fail("DataManager.createOrg does not throw IllegalStateException when WebClient returns null");
+		
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testCreateOrg_WebClientReturnsError() {
+
+		dm = new DataManager(new WebClient("localhost", 3001) {
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return "{\"status\":\"error\",\"error\":\"An unexpected database error occurred\"}";
+			}
+		});
+		dm.createOrg("login", "password", "name", "description");
+		fail("DataManager.createOrg does not throw IllegalStateException when WebClient returns error");
+		
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testCreateOrg_WebClientReturnsMalformedJSON() {
+
+		dm = new DataManager(new WebClient("localhost", 3001) {
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return "I AM NOT JSON!";
+			}
+		});
+		dm.createOrg("login", "password", "name", "description");
+		fail("DataManager.createOrg does not throw IllegalStateException when WebClient returns malformed JSON");
+		
+	}
+
 }

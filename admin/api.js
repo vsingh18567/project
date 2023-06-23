@@ -30,6 +30,49 @@ app.use('/findOrgByLoginAndPassword', (req, res) => {
     });
 
 /*
+Return the Org with login specified as req.query.login
+*/
+app.use('/findOrgByLogin', (req, res) => {
+
+	var query = {"login" : req.query.login};
+    
+	Organization.findOne( query, (err, result) => {
+		if (err) {
+		    res.json({'status': 'error', 'data' : err});
+		}
+		else {
+		    //console.log(result);
+		    res.json({'status' : 'success', 'data' : result});
+		}
+	    });
+	
+    });
+
+/*
+Create a new org
+*/
+app.use('/createOrg', (req, res) => {
+
+	var org = new Organization({
+		login: req.query.login,
+		password: req.query.password,
+		name: req.query.name,
+		description: req.query.description,
+		funds: []
+	    });
+
+	org.save( (err) => {
+		if (err) {
+		    res.json({ "status": "error", "data" : err});
+		}
+		else {
+		    res.json({ "status": "success", "data" : org});
+		}
+	    });
+
+    });
+
+/*
 Create a new fund
 */
 app.use('/createFund', (req, res) => {

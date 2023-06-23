@@ -244,9 +244,15 @@ public class UserInterface {
 		in.nextLine();
 	}
 
-	public boolean login(String login, String password) {
+	public boolean login() {
 		dataManager = new DataManager(new WebClient("localhost", 3001));
 		boolean retry = true;
+
+		System.out.println("Please enter your login: ");
+		String login = in.nextLine();
+		System.out.println("Please enter your password: ");
+		String password = in.nextLine();
+
 		while (retry) {
 			try {
 				org = dataManager.attemptLogin(login, password);
@@ -271,33 +277,110 @@ public class UserInterface {
 		
 	}
 
+	public boolean createOrg() {
+		dataManager = new DataManager(new WebClient("localhost", 3001));
+		boolean retry = true;
+		
+		
+		while (retry) {
+				System.out.println("Please enter a login: ");
+				String login = in.nextLine().trim();
+				// if invalid, request data re-entry
+				while (login.length() == 0 || dataManager.getOrg(login)) {
+					if (login.length() == 0) {
+						System.out.println("Re-enter a login with alphanumeric characters:");
+						login = in.nextLine().trim();
+					}
+					if (dataManager.getOrg(login)) {
+						System.out.println("Login already exists. Please try again.");
+						login = in.nextLine().trim();
+					}
+				}
+				System.out.println("Please enter a password: ");
+				String password = in.nextLine().trim();
+				// if invalid, request data re-entry
+				while (password.length() == 0) {
+					System.out.println("Re-enter a password with alphanumeric characters:");
+					password = in.nextLine().trim();
+				}				
+				System.out.println("Please enter a name: ");
+				String name = in.nextLine().trim();
+				// if invalid, request data re-entry
+				while (name.length() == 0) {
+					System.out.println("Re-enter an organization name with alphanumeric characters:");
+					name = in.nextLine().trim();
+				}				
+				System.out.println("Please enter a description: ");
+				String description = in.nextLine().trim();	
+				// if invalid, request data re-entry
+				while (description.length() == 0) {
+					System.out.println("Re-enter a description with alphanumeric characters:");
+					description = in.nextLine().trim();
+				}	
+			try {
+				org = dataManager.createOrg(login, password, name, description);
+				retry = false;
+			} catch (Exception e) {
+				System.out.println("Error communicating with API. Would you like to retry operation? [y/n]");
+				if (!in.nextLine().equals("y")) {
+					retry = false;
+				}
+			}
+		}
+		if (org == null) {
+			return false;
+		} else {
+			return true;
+		}
+		
+	}
+
 	public static void main(String[] args) {
 
 		Scanner in = new Scanner(System.in);
 
 		UserInterface ui = new UserInterface(null, null);
-		String login = args[0];
-		String password = args[1];
 
+		System.out.println("Welcome to the Organization App.");
+		System.out.println("Would you like to log in with an existing organization or create a new organization?\n" + //
+					"Enter e for existing or n for new organization: ");
+
+		String answer = in.nextLine();
 		while (true) {
+			if (answer.equals("n") || answer.equals("e")) {
+				if (answer.equals("n")) {
 
-			if (!ui.login(login, password)) {
-				System.out.println("Login failed.");
-				break;
-			} else {
-				ui.start();
+					if (!ui.createOrg()) {
+						System.out.println("Creating new Organization failed.");
+						break;
+					} else {
+						ui.start();
+					}
+
+				} else if (answer.equals("e")) {
+					if (!ui.login()) {
+						System.out.println("Login failed.");
+						break;
+					} else {
+						ui.start();
+					}
+				}
+
 				System.out.println("Do you want to log back in? y/n");
 				if (in.nextLine().equals("y")) {
 					ui = new UserInterface(null, null);
-					System.out.println("Please provide your login: ");
-					login = in.nextLine();
-					System.out.println("Please provide your password: ");
-					password = in.nextLine();
+					System.out.println("Would you like to log in with an existing organization or create a new organization?\n" + //
+						"Enter e for existing or n for new organization: ");
+					answer = in.nextLine();
 				} else {
 					System.out.println("Thanks for using Organization App.");
 					break;
 				}
 
+			} else {
+				System.out.println("Invalid response, please try again.\n" + //
+						"Enter e for existing or n for new organization: ");
+				answer = in.nextLine();
 			}
 		}
 		
