@@ -49,6 +49,42 @@ app.use('/findOrgByLogin', (req, res) => {
     });
 
 /*
+check if password is correct for org
+*/
+app.use('/checkPassword', (req, res) => {
+	var query = {
+		"_id": req.query._id,
+		"password": req.query.password
+	}
+	const org = Organization.findOne(query, (err, result) => {
+		if (err) {
+			res.json({'status': 'error', 'data': err})
+		} else {
+			res.json({'status': 'success', 'data': result})
+		}
+	});
+})
+
+/*
+update password for org
+*/
+app.use('/updatePassword', (req, res) => {
+	var filter = {
+		"_id": req.query._id
+	}
+	var update = {
+		"password": req.query.password
+	}
+	Organization.findOneAndUpdate(filter, update, (err, result) => {
+		if (err) {
+		    res.json({'status' : 'error', 'data' : err});
+		} else {
+			res.json({'status': 'success', 'data': result})
+		}
+	})
+})
+
+/*
 Create a new org
 */
 app.use('/createOrg', (req, res) => {
