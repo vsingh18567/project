@@ -199,7 +199,7 @@ public class UserInterface {
 		String password = in.nextLine();
 		boolean passwordCheck;
 		try {
-			passwordCheck = dataManager.checkPassword(org, password);
+			passwordCheck = dataManager.checkPassword(org.getId(), password);
 		} catch (Exception e) {
 			System.out.println("Error in changing password. Would you like to retry operation? [y/n]");
 			if (in.nextLine().equals("y")) {
@@ -215,7 +215,7 @@ public class UserInterface {
 			if (newPassword1.equals(newPassword2)) {
 				boolean success = true;
 				try {
-					if (!dataManager.updatePassword(org, newPassword1))  {
+					if (!dataManager.updatePassword(org.getId(), newPassword1))  {
 						success = false;
 					}
 				} catch (Exception e) {

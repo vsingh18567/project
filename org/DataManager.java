@@ -25,7 +25,6 @@ public class DataManager {
 		}
 		String response = client.makeRequest(resource, map);
 		if (response == null) {
-			System.out.println("response null");
 			throw new IllegalStateException();
 		}
 		return response;
@@ -240,12 +239,12 @@ public class DataManager {
 		else throw new IllegalStateException();
 	}
 
-	public boolean checkPassword(Organization org, String password) {
-		if (org == null || password == null || password.length() == 0) {
+	public boolean checkPassword(String org_id, String password) {
+		if (org_id == null || password == null || password.length() == 0) {
 			throw new IllegalArgumentException();
 		}
 		Map<String, Object> map = new HashMap<>();
-		map.put("_id", org.getId());
+		map.put("_id", org_id);
 		map.put("password", password);
 		String response = makeRequestWrapper("/checkPassword", map);
 		JSONParser parser = new JSONParser();
@@ -264,13 +263,12 @@ public class DataManager {
 		return data != null;
 	}
 
-	public boolean updatePassword(Organization org, String newPassword) {
-		if (org == null || newPassword == null || newPassword.length() == 0) {
+	public boolean updatePassword(String org_id, String newPassword) {
+		if (org_id == null || newPassword == null || newPassword.length() == 0) {
 			throw new IllegalArgumentException();
 		}
 		Map<String, Object> map = new HashMap<>();
-		System.out.println(org.getId());
-		map.put("_id", org.getId());
+		map.put("_id", org_id);
 		map.put("password", newPassword);
 		String response = makeRequestWrapper("/updatePassword", map);
 		JSONParser parser = new JSONParser();
