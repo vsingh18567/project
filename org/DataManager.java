@@ -25,6 +25,7 @@ public class DataManager {
 		}
 		String response = client.makeRequest(resource, map);
 		if (response == null) {
+			System.out.println("response null");
 			throw new IllegalStateException();
 		}
 		return response;
@@ -55,20 +56,20 @@ public class DataManager {
 
 		if (status.equals("success")) {
 			JSONObject data = (JSONObject)json.get("data");
-			String fundId = (String)data.get("_id");
-			if (fundId == null) {
+			String orgId = (String)data.get("_id");
+			if (orgId == null) {
 				return null;
 			}
 			String name = (String)data.get("name");
 			String description = (String)data.get("description");
-			Organization org = new Organization(fundId, name, description);
+			Organization org = new Organization(orgId, name, description);
 
 			JSONArray funds = (JSONArray)data.get("funds");
 			if (funds != null) {
 				Iterator it = funds.iterator();
 				while(it.hasNext()){
 					JSONObject fund = (JSONObject) it.next();
-					fundId = (String)fund.get("_id");
+					String fundId = (String)fund.get("_id");
 					name = (String)fund.get("name");
 					description = (String)fund.get("description");
 					long target = (Long) fund.get("target");
@@ -169,5 +170,74 @@ public class DataManager {
 
 	}
 
+	/**
+	 * This method creates a new organization in the database using the /createOrg endpoint in the API
+	 * @return a new Organization object if successful; throw IllegalStateException if unsuccessful
+	 */
+	public Organization createOrg(String login, String password, String name, String description) {
+
+		if (login == null || password == null || name == null || description == null) {throw new IllegalArgumentException();}
+		Map<String, Object> map = new HashMap<>();
+		map.put("login", login);
+		map.put("password", password);
+		map.put("name", name);
+		map.put("description", description);
+		String response = makeRequestWrapper("/createOrg", map);
+
+		JSONParser parser = new JSONParser();
+		JSONObject json;
+		try {
+			json = (JSONObject) parser.parse(response);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+		String status = (String)json.get("status");
+		if (status == null) {throw new IllegalStateException();}
+		if (status.equals("success")) {
+			JSONObject org = (JSONObject)json.get("data");
+			String orgId = (String)org.get("_id");
+			return new Organization(orgId, name, description);
+		}
+		else throw new IllegalStateException();
+
+	}
+
+	/**
+	 * Check if org with the specified login already exists.
+	 * This method uses the /findOrgByLogin endpoint in the API.
+	 * @return true if org found; false if no org found
+	 */
+	public boolean getOrg(String login) {
+		if (login == null) {throw new IllegalArgumentException();}
+		Map<String, Object> map = new HashMap<>();
+		map.put("login", login);
+		String response = makeRequestWrapper("/findOrgByLogin", map);
+		JSONParser parser = new JSONParser();
+		JSONObject json;
+		try {
+			json = (JSONObject) parser.parse(response);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+		String status = (String)json.get("status");
+
+		if (status == null) {throw new IllegalStateException();}
+
+		if (status.equals("success")) {
+			JSONObject data = (JSONObject)json.get("data");
+			if (data == null) {
+				return false;
+			}
+			String orgId = (String)data.get("_id");
+			if (orgId == null) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		else throw new IllegalStateException();
+	}
 
 }
