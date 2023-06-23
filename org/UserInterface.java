@@ -11,7 +11,7 @@ public class UserInterface {
 
 	private DataManager dataManager;
 	private Organization org;
-	private Scanner in = new Scanner(System.in);
+	private final Scanner in = new Scanner(System.in);
 	private Map<Integer, String> aggDonationsFundMap;
 
 	public UserInterface(DataManager dataManager, Organization org) {
@@ -39,7 +39,7 @@ public class UserInterface {
 			}
 			System.out.println("Enter 0 to create a new fund");
 			System.out.println("Enter -1 to logout.");
-			
+			System.out.println("Enter p to change password");
 
 			int option = -2;
 
@@ -58,12 +58,16 @@ public class UserInterface {
 							System.out.println("Re-enter a listed fund number, $ to see all donations, -1 to logout, or 0 to create a new fund:");
 							in.nextLine();
 						}
-					
-					} else if (in.next().equals("$")) {
-						    // assign -99 as the option for displaying all donations for the organization
-							option = -99;
 
+					} else {
+						String next = in.next();
+						if (next.equals("$")) {
+							option = -99;
 							prompt = false;
+						} else if (next.equals("p")) {
+							option = -98;
+							prompt = false;
+						}
 					}
 				} catch (InputMismatchException ime) {
 					
@@ -77,7 +81,10 @@ public class UserInterface {
 				createFund();
 			} else if (option == -99) {
 				displayAllDonations();
-			} else if (option == -1) {
+			} else if (option == -98) {
+				changePassword();
+			}
+			else if (option == -1) {
 				break;
 			} else {
 				displayFund(option);
@@ -183,6 +190,51 @@ public class UserInterface {
 			if (in.nextLine().equals("y")) {
 				createFund();
 			}
+		}
+	}
+
+	public void changePassword() {
+		System.out.println("Enter existing password:");
+		in.nextLine();
+		String password = in.nextLine();
+		boolean passwordCheck;
+		try {
+			passwordCheck = dataManager.checkPassword(org, password);
+		} catch (Exception e) {
+			System.out.println("Error in changing password. Would you like to retry operation? [y/n]");
+			if (in.nextLine().equals("y")) {
+				changePassword();
+			}
+			return;
+		}
+		if (passwordCheck) {
+			System.out.println("Enter new password:");
+			String newPassword1 = in.nextLine();
+			System.out.println("Enter new password again:");
+			String newPassword2 = in.nextLine();
+			if (newPassword1.equals(newPassword2)) {
+				boolean success = true;
+				try {
+					if (!dataManager.updatePassword(org, newPassword1))  {
+						success = false;
+					}
+				} catch (Exception e) {
+					success = false;
+				}
+				if (success) {
+					System.out.println("Password successfully updated.");
+				}
+				else {
+					System.out.println("Error in changing password. Would you like to retry operation? [y/n]");
+					if (in.nextLine().equals("y")) {
+						changePassword();
+					}
+				}
+			} else {
+				System.out.println("Error: Passwords don't match");
+			}
+		} else {
+			System.out.println("Wrong password entered");
 		}
 	}
 
@@ -342,8 +394,9 @@ public class UserInterface {
 		UserInterface ui = new UserInterface(null, null);
 
 		System.out.println("Welcome to the Organization App.");
-		System.out.println("Would you like to log in with an existing organization or create a new organization?\n" + //
-					"Enter e for existing or n for new organization: ");
+		System.out.println("Enter key for options");
+		System.out.println("- e (log into an existing organization)");
+		System.out.println("- n (create a new organization)");
 
 		String answer = in.nextLine();
 		while (true) {
