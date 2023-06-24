@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Login failed! Check connection and try again.", Toast.LENGTH_LONG).show();
         } catch (IllegalArgumentException iae) {
             Toast.makeText(this, "Login failed! Input error.", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Unknown error. Please try again.", Toast.LENGTH_LONG).show();
         }
 
 

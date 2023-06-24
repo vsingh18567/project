@@ -71,14 +71,8 @@ public class DataManager {
 
                     JSONObject jsonDonation = donations.getJSONObject(i);
 
-                    String fund;
                     String fundId = (String)jsonDonation.get("fund");
-                    if (fundNameCache.containsKey(fundId)) {
-                        fund = fundNameCache.get(fundId);
-                    } else {
-                        fund = getFundName(fundId);
-                        fundNameCache.put(fundId, fund);
-                    }
+                    String fund = getFundName(fundId);
                     String date = (String)jsonDonation.get("date");
                     double amount = Double.parseDouble(jsonDonation.get("amount").toString());
 
@@ -120,6 +114,10 @@ public class DataManager {
             throw new IllegalArgumentException("Arguments cannot be null!");
         }
 
+        if (fundNameCache.containsKey(id)) {
+            return fundNameCache.get(id);
+        }
+
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
         String response = client.makeRequest("/findFundNameById", map);
@@ -133,6 +131,7 @@ public class DataManager {
 
             if (status.equals("success")) {
                 String name = (String)json.get("data");
+                fundNameCache.put(id, name);
                 return name;
             } else if (status.equals("not found")) {
                 return "Unknown fund";
