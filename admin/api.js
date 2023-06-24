@@ -150,7 +150,72 @@ app.use('/findContributorNameById', (req, res) => {
 	    });
     });
 
+/*
+Finds Contributor's password by Contributor ID
+*/
+app.use('/findContributorPasswordById', (req, res) => {
+    
+	var query = { "_id" : req.query.id };
+	
+	Contributor.findOne(query, (err, result) => {
+		if (err) {
+		    res.json({'status': 'error', 'data' : err});
+		}
+		else if (!result) {
+		    res.json({'status': 'not found'});
+		}
+		else {
+		    res.json({'status': 'success', 'data': result.password});
+		}
+		
+	    });
+    });
 
+/*
+Updates Contributor account information
+*/
+app.use('/updateContributor', (req, res) => {
+
+	var filter = {"_id" : req.query.id };
+
+	var update = { "name" : req.query.name, "email" : req.query.email, "creditCardNumber" : req.query.card_number, "creditCardCVV" : req.query.card_cvv, "creditCardExpiryMonth" : req.query.card_month, "creditCardExpiryYear": req.query.card_year, "creditCardPostCode" : req.query.card_postcode };
+	
+	var action = { "$set" : update };
+
+	Contributor.findOneAndUpdate( filter, action, { new : true }, (err, result) => {
+		if (err) {
+			res.json({'status' : 'error', 'data' : err});
+		}
+		else {
+			var fundIds = [];
+			result.donations.forEach( (donation) => {
+				fundIds.push(donation.fund);
+			});
+
+
+			var filter = {"_id" : { "$in" : fundIds } };
+			Fund.find(filter, (err, all) => {
+				
+				var map = new Map();
+			
+				all.forEach((fund) => {
+					map.set(String(fund._id), fund.name);
+				});
+				
+				result.donations.forEach( (donation) => {
+					donation.fundName = map.get(donation.fund);
+				});
+
+				res.json({'status' : 'success', 'data' : result });
+				
+			});
+
+
+		}
+		});
+	
+	});
+	
 /*
 Make a new donation to the fund with ID specified as req.query.fund
 from the contributor with ID specified as req.query.contributor
