@@ -245,7 +245,7 @@ public class DataManager {
 	 * @return status message if received; null if no status message received
 	 */
 	public String attemptMakeDonation (String contributorId, String fundId, long amount) {
-		if (fundId == null) {throw new IllegalArgumentException();}
+		if (fundId == null || contributorId == null || amount < 0) {throw new IllegalArgumentException();}
 		Map<String, Object> map = new HashMap<>();
 		map.put("contributor", fundId);
 		map.put("fund", fundId);
