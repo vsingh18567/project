@@ -40,7 +40,7 @@ public class DataManager_checkPassword_Test {
         assertFalse(dm.checkPassword(id, password));
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void test_ClientReturnsNotFound() {
 
         DataManager dm = new DataManager(new WebClient(null, 0) {
@@ -49,7 +49,30 @@ public class DataManager_checkPassword_Test {
                 return "{\"status\":\"not found\"}";
             }
         });
+        assertFalse(dm.checkPassword("0", "password"));
+    }
 
+    @Test(expected=IllegalStateException.class)
+    public void test_ClientReturnsUnknownStatus() {
+
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"unknown\"}";
+            }
+        });
+        dm.checkPassword("0", "password");
+    }
+
+    @Test
+    public void test_ClientReturnsNullStatus() {
+
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":null}";
+            }
+        });
         assertFalse(dm.checkPassword("0", "password"));
     }
 
@@ -87,7 +110,6 @@ public class DataManager_checkPassword_Test {
             }
         });
         dm.checkPassword("0", "password");
-
     }
 
     @Test(expected=IllegalStateException.class)

@@ -1,6 +1,7 @@
 package edu.upenn.cis573.project;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -47,7 +48,7 @@ public class DataManager_editUserInfo_Test {
         DataManager dm = new DataManager(new WebClient(null, 0) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                if (resource.equals("/findContributorByLoginAndPassword")) {
+                if (resource.equals("/updateContributor")) {
                     return contributorObj;
                 } else {
                     return "{\"status\":\"success\",\"data\":\"" + fund + "\"}";
@@ -93,6 +94,46 @@ public class DataManager_editUserInfo_Test {
         ccey = "0";
         ccpc = "19104";
         dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+    }
+
+    @Test
+    public void test_UnknownStatus() {
+
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"unknown\"}";
+            }
+        });
+
+        name = "c";
+        email = "c@email.com";
+        ccn = "1234567812345678";
+        cvv = "999";
+        ccem = "0";
+        ccey = "0";
+        ccpc = "19104";
+        assertNull(dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc));
+    }
+
+    @Test
+    public void test_NullStatus() {
+
+        DataManager dm = new DataManager(new WebClient(null, 0) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":null}";
+            }
+        });
+
+        name = "c";
+        email = "c@email.com";
+        ccn = "1234567812345678";
+        cvv = "999";
+        ccem = "0";
+        ccey = "0";
+        ccpc = "19104";
+        assertNull(dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc));
     }
 
     @Test(expected=IllegalStateException.class)

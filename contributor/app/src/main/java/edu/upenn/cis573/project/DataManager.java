@@ -96,7 +96,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
@@ -129,10 +129,11 @@ public class DataManager {
             if (status.equals("success")) {
                 String correct_pw = (String)json.get("data");
                 return correct_pw.equals(password);
-            } else if (status.equals("not found") || status.equals("error")) {
-                throw new IllegalStateException("Client error");
-            } else {
+            } else if (status.equals("not found")) {
                 return false;
+            } else {
+                // if status.equals("error")
+                throw new IllegalStateException("Client returned error");
             }
 
         } catch (JSONException je) {
@@ -140,7 +141,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return false;
         }
     }
@@ -168,7 +169,7 @@ public class DataManager {
         map.put("creditCardExpiryMonth", creditCardExpiryMonth);
         map.put("creditCardExpiryYear", creditCardExpiryYear);
         map.put("creditCardPostCode", creditCardPostCode);
-        String response = client.makeRequest("/findContributorByLoginAndPassword", map);
+        String response = client.makeRequest("/updateContributor", map);
         if (response == null) {
             throw new IllegalStateException("Client did not return valid response");
         }
@@ -214,7 +215,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
@@ -265,7 +266,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
@@ -343,7 +344,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
@@ -387,7 +388,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return false;
         }
 
