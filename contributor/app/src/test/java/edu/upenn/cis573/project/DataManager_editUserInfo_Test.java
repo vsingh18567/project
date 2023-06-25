@@ -57,7 +57,7 @@ public class DataManager_editUserInfo_Test {
         });
         double epsilon = 1e-6;
 
-        Contributor c = dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        Contributor c = dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
         assertNotNull(c);
         assertEquals(id, c.getId());
         assertEquals(name, c.getName());
@@ -86,6 +86,7 @@ public class DataManager_editUserInfo_Test {
             }
         });
 
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -93,7 +94,7 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
     }
 
     @Test
@@ -106,6 +107,7 @@ public class DataManager_editUserInfo_Test {
             }
         });
 
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -113,7 +115,7 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        assertNull(dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc));
+        assertNull(dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc));
     }
 
     @Test
@@ -126,6 +128,7 @@ public class DataManager_editUserInfo_Test {
             }
         });
 
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -133,12 +136,13 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        assertNull(dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc));
+        assertNull(dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc));
     }
 
     @Test(expected=IllegalStateException.class)
     public void test_WebClientIsNull() {
         dm = new DataManager(null);
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -146,12 +150,28 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void test_IdIsNull() {
+        dm = new DataManager(new WebClient(null, 0));
+//        id = null;
+        name = "c";
+        email = "c@email.com";
+        ccn = "1234567812345678";
+        cvv = "999";
+        ccem = "0";
+        ccey = "0";
+        ccpc = "19104";
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
+
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void test_NameIsNull() {
         dm = new DataManager(new WebClient(null, 0));
+        id = "0";
 //        name = null;
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -159,13 +179,14 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
 
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void test_EmailIsNull() {
         dm = new DataManager(new WebClient(null, 0));
+        id = "0";
         name = "c";
 //        email = null;
         ccn = "1234567812345678";
@@ -173,13 +194,14 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
 
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void test_CCNIsNull() {
         dm = new DataManager(new WebClient(null, 0));
+        id = "0";
         name = "c";
         email = "c@email.com";
 //        ccn = null;
@@ -187,13 +209,14 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
 
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void test_CVVIsNull() {
         dm = new DataManager(new WebClient(null, 0));
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -201,13 +224,14 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
 
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void test_ExpirationMonthIsNull() {
         dm = new DataManager(new WebClient(null, 0));
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -215,13 +239,14 @@ public class DataManager_editUserInfo_Test {
 //        ccem = null;
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
 
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void test_ExpirationYearIsNull() {
         dm = new DataManager(new WebClient(null, 0));
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -229,13 +254,14 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
 //        ccey = null;
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
 
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void test_PostalCodeIsNull() {
         dm = new DataManager(new WebClient(null, 0));
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -243,7 +269,7 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
 //        ccpc = null;
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
 
     }
 
@@ -251,6 +277,7 @@ public class DataManager_editUserInfo_Test {
     public void test_WebClientCannotConnectToServer() {
         // assumes no server is running on port 3002
         dm = new DataManager(new WebClient("10.0.2.2", 3002));
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -258,7 +285,7 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
     }
 
     @Test(expected=IllegalStateException.class)
@@ -269,6 +296,7 @@ public class DataManager_editUserInfo_Test {
                 return null;
             }
         });
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -276,7 +304,7 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
     }
 
     @Test(expected=IllegalStateException.class)
@@ -287,6 +315,7 @@ public class DataManager_editUserInfo_Test {
                 return "{\"status\":\"error\",\"error\":\"An unexpected database error occurred\"}";
             }
         });
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -294,7 +323,7 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
     }
 
     @Test(expected=IllegalStateException.class)
@@ -305,6 +334,7 @@ public class DataManager_editUserInfo_Test {
                 return "Malformed JSON";
             }
         });
+        id = "0";
         name = "c";
         email = "c@email.com";
         ccn = "1234567812345678";
@@ -312,6 +342,6 @@ public class DataManager_editUserInfo_Test {
         ccem = "0";
         ccey = "0";
         ccpc = "19104";
-        dm.editUserInfo(name, email, ccn, cvv, ccem, ccey, ccpc);
+        dm.editUserInfo(id, name, email, ccn, cvv, ccem, ccey, ccpc);
     }
 }

@@ -187,6 +187,8 @@ app.use('/updateContributor', (req, res) => {
 			res.json({'status' : 'error', 'data' : err});
 		}
 		else {
+			// console.log(result);
+
 			var fundIds = [];
 			result.donations.forEach( (donation) => {
 				fundIds.push(donation.fund);

@@ -152,23 +152,24 @@ public class DataManager {
      * @throws IllegalStateException for client errors
      * @throws IllegalArgumentException for invalid arguments
      */
-    public Contributor editUserInfo(String name, String email, String creditCardNumber, String creditCardCVV, String creditCardExpiryMonth, String creditCardExpiryYear, String creditCardPostCode) {
+    public Contributor editUserInfo(String id, String name, String email, String creditCardNumber, String creditCardCVV, String creditCardExpiryMonth, String creditCardExpiryYear, String creditCardPostCode) {
         if (client == null) {
             throw new IllegalStateException("Client cannot be null!!");
         }
-        if (name == null || email == null || creditCardNumber == null || creditCardCVV == null ||
+        if (id == null || name == null || email == null || creditCardNumber == null || creditCardCVV == null ||
                 creditCardExpiryYear == null || creditCardExpiryMonth == null || creditCardPostCode == null) {
             throw new IllegalArgumentException("Arguments cannot be null!");
         }
 
         Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
         map.put("name", name);
         map.put("email", email);
-        map.put("creditCardNumber", creditCardNumber);
-        map.put("creditCardCVV", creditCardCVV);
-        map.put("creditCardExpiryMonth", creditCardExpiryMonth);
-        map.put("creditCardExpiryYear", creditCardExpiryYear);
-        map.put("creditCardPostCode", creditCardPostCode);
+        map.put("card_number", creditCardNumber);
+        map.put("card_cvv", creditCardCVV);
+        map.put("card_month", creditCardExpiryMonth);
+        map.put("card_year", creditCardExpiryYear);
+        map.put("card_postcode", creditCardPostCode);
         String response = client.makeRequest("/updateContributor", map);
         if (response == null) {
             throw new IllegalStateException("Client did not return valid response");
@@ -180,7 +181,7 @@ public class DataManager {
 
             if (status.equals("success")) {
                 JSONObject data = (JSONObject)json.get("data");
-                String id = (String)data.get("_id");
+                // String id = (String)data.get("_id");
                 Contributor contributor = new Contributor(id, name, email, creditCardNumber, creditCardCVV, creditCardExpiryYear, creditCardExpiryMonth, creditCardPostCode);
 
                 List<Donation> donationList = new LinkedList<>();
@@ -208,6 +209,7 @@ public class DataManager {
             } else if (status.equals("error")) {
                 throw new IllegalStateException("Client returned error");
             }
+            Log.v("DataManager_editUserInfo", "returning null.");
             return null;
 
         } catch (JSONException je) {
