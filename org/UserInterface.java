@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -272,28 +273,157 @@ public class UserInterface {
 		List<Donation> donations = fund.getDonations();
 		System.out.println("Number of donations: " + donations.size());
 		System.out.println("Total donation amount: $" + totalDonation + " (" + (totalDonation/target)*100 + "% of target)");
+		
+		System.out.println("\nEnter 'donation' to make a donation to this fund.");		
 
 		System.out.println("\n" + //
 				"You can display donations in chronological order or by contributor." + "\n" + //
 				"Do you want to display donations in chronological order? y/n");
-		if (in.nextLine().equals("y")) {
+		
+		String response1 = in.nextLine();
+		
+		if (response1.equals("y")) {
 			System.out.println();
 			for (Donation donation : donations) {
 				// print donation dates in display format (e.g., June 18, 2021)
 				System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on "
 						+ donation.getDateFormatted());
 			}
+		} else if (response1.equals("donation")) {
+			createDonation(fund.getId());
 		}
 
 		System.out.println("\n" + //
 				"Do you want to display donations by contributor? y/n");
-		if (in.nextLine().equals("y")) {
-			System.out.println("\n" + aggregateDonationsString(fundNumber, fund.getContributorSumDonations(), fund.getContributorNumDonations()));
-		}
 		
+		String response2 = in.nextLine();
+		
+		if (response2.equals("y")) {
+			System.out.println("\n" + aggregateDonationsString(fundNumber, fund.getContributorSumDonations(), fund.getContributorNumDonations()));
+		} else if (response2.equals("donation")) {
+			createDonation(fund.getId());
+		}	
 
 		System.out.println("Press the Enter key to go back to the listing of funds");
 		in.nextLine();
+	}
+	
+	private void createDonation(String fundId) {
+
+		boolean promptContributorId = true;
+		boolean promptDonationAmount = true;
+		boolean retry = true;
+
+		// 1 - collect contributor ID
+
+		String contributorName = "";
+
+		System.out.println("\nEnter a contributor ID: ");
+		String contributorId = in.nextLine().trim();
+
+		// if empty string, request data re-entry
+		while (contributorId.trim().length() == 0) {
+			System.out.println("Re-enter a contributor ID with alphanumeric characters:");
+			contributorId = in.nextLine().trim();
+		}
+
+		// check that contributor ID exists
+		while (promptContributorId) {
+			contributorName = "";
+			contributorName = contributorNameById(contributorId).trim();
+			if (contributorName.length() > 0) {
+				promptContributorId = false;
+			} else {
+
+				System.out.println("The contributor ID could not be located. Would you like to retry? [y/n]");
+
+				if (in.nextLine().equals("n")) {
+					return;
+				}
+			}
+		}
+
+		// 2 - collect donation amount
+
+		System.out.println("Enter the donation amount: ");
+
+		long donationAmount = 0;
+
+		do {
+			try {
+				donationAmount = in.nextInt();
+
+				if (donationAmount > 0) {
+					promptDonationAmount = false;
+				} else {
+					// request data re-entry due to invalid value
+					System.out.println("Re-enter a donation amount as a positive whole number:");					
+				}
+				in.nextLine();
+			} catch (InputMismatchException ime) {
+				// request data re-entry due to invalid value
+				System.out.println("Re-enter a donation amount as a positive whole number:");
+				in.nextLine();
+			}
+		} while (promptDonationAmount);	
+
+		// 3 - attempt to save the donation
+
+		String status = "";
+
+		while (retry) {
+			try {
+				status = dataManager.attemptMakeDonation(contributorId, fundId, donationAmount);
+				retry = false;
+			} catch (Exception e) {
+				System.out.println("Error in saving donation (" + e.toString() + "). Would you like to retry operation? [y/n]");
+				if (in.nextLine().equals("n")) {
+					return;
+				}
+			}
+		}
+
+		if (status.equals("success")) {
+			Fund f = org.getFundById(fundId);
+
+			Donation d = new Donation(fundId, contributorName, donationAmount, Instant.now().toString());
+			f.addDonation(d);
+
+			System.out.println("The donation to " + org.getFundById(fundId).getName() + " was successfully saved.");
+
+			return;
+		} else {
+			System.out.println("Status: " + status + ". The donation was not saved due to a system problem. Would you like to retry operation? [y/n]");
+			if (in.nextLine().equals("y")) {
+				createDonation(fundId);
+				return;
+			} else {
+				return;
+			}
+		}	
+	}
+
+	private String contributorNameById (String Id) {
+		String contributorName = "";
+		
+		String contributorId = Id.trim();
+		
+		if (contributorId.length() == 0) {
+			return "";
+		}
+		
+			try {
+				contributorName = dataManager.getContributorName(contributorId);
+				if (contributorName.trim().length() == 0) {
+					return "";
+				} else {
+					System.out.println("The contributor, " + contributorName + ", was located in the database.");
+				}
+			} catch (Exception e) {
+				return "";
+			}	
+
+		return contributorName;
 	}
 
 	public boolean login() {

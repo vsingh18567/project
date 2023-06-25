@@ -45,6 +45,12 @@ public class Fund {
 		} 
 		return totalDonation;
 	}
+	
+	protected void addDonation(Donation d) {
+		if (d != null) {
+			donations.add(d);
+		}
+	}
 
 	public Map<String, Integer> getContributorNumDonations() {
 		Map<String, Integer> contributorNumDonations = new HashMap<>();
