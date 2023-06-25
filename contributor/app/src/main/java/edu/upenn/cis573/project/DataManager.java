@@ -71,14 +71,8 @@ public class DataManager {
 
                     JSONObject jsonDonation = donations.getJSONObject(i);
 
-                    String fund;
                     String fundId = (String)jsonDonation.get("fund");
-                    if (fundNameCache.containsKey(fundId)) {
-                        fund = fundNameCache.get(fundId);
-                    } else {
-                        fund = getFundName(fundId);
-                        fundNameCache.put(fundId, fund);
-                    }
+                    String fund = getFundName(fundId);
                     String date = (String)jsonDonation.get("date");
                     double amount = Double.parseDouble(jsonDonation.get("amount").toString());
 
@@ -102,7 +96,128 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Checks that the inputted password is correct using the /findContributorPasswordById endpoint
+     * @return boolean representing if tested password matches or not, null if error
+     * @throws IllegalStateException for client errors
+     * @throws IllegalArgumentException for invalid arguments
+     */
+    public boolean checkPassword(String id, String password) {
+        if (client == null) {
+            throw new IllegalStateException("Client cannot be null!!");
+        }
+        if (id == null || password == null) {
+            throw new IllegalArgumentException("Arguments cannot be null!");
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        String response = client.makeRequest("/findContributorPasswordById", map);
+        if (response == null) {
+            throw new IllegalStateException("Client did not return valid response");
+        }
+
+        try {
+            JSONObject json = new JSONObject(response);
+            String status = (String)json.get("status");
+
+            if (status.equals("success")) {
+                String correct_pw = (String)json.get("data");
+                return correct_pw.equals(password);
+            } else if (status.equals("not found")) {
+                return false;
+            } else {
+                // if status.equals("error")
+                throw new IllegalStateException("Client returned error");
+            }
+
+        } catch (JSONException je) {
+            throw new IllegalStateException("Client returned Malformed JSON");
+        } catch (IllegalStateException ie) {
+            throw ie;
+        } catch (Exception e) {
+            // e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Updates user (Contributor) account information using the /updateContributor endpoint
+     * @return the new Contributor information if successful, null otherwise
+     * @throws IllegalStateException for client errors
+     * @throws IllegalArgumentException for invalid arguments
+     */
+    public Contributor editUserInfo(String id, String name, String email, String creditCardNumber, String creditCardCVV, String creditCardExpiryMonth, String creditCardExpiryYear, String creditCardPostCode) {
+        if (client == null) {
+            throw new IllegalStateException("Client cannot be null!!");
+        }
+        if (id == null || name == null || email == null || creditCardNumber == null || creditCardCVV == null ||
+                creditCardExpiryYear == null || creditCardExpiryMonth == null || creditCardPostCode == null) {
+            throw new IllegalArgumentException("Arguments cannot be null!");
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("name", name);
+        map.put("email", email);
+        map.put("card_number", creditCardNumber);
+        map.put("card_cvv", creditCardCVV);
+        map.put("card_month", creditCardExpiryMonth);
+        map.put("card_year", creditCardExpiryYear);
+        map.put("card_postcode", creditCardPostCode);
+        String response = client.makeRequest("/updateContributor", map);
+        if (response == null) {
+            throw new IllegalStateException("Client did not return valid response");
+        }
+
+        try {
+            JSONObject json = new JSONObject(response);
+            String status = (String)json.get("status");
+
+            if (status.equals("success")) {
+                JSONObject data = (JSONObject)json.get("data");
+                // String id = (String)data.get("_id");
+                Contributor contributor = new Contributor(id, name, email, creditCardNumber, creditCardCVV, creditCardExpiryYear, creditCardExpiryMonth, creditCardPostCode);
+
+                List<Donation> donationList = new LinkedList<>();
+
+                JSONArray donations = (JSONArray)data.get("donations");
+
+                for (int i = 0; i < donations.length(); i++) {
+
+                    JSONObject jsonDonation = donations.getJSONObject(i);
+
+                    String fundId = (String)jsonDonation.get("fund");
+                    String fund = getFundName(fundId);
+                    String date = (String)jsonDonation.get("date");
+                    double amount = Double.parseDouble(jsonDonation.get("amount").toString());
+
+                    Donation donation = new Donation(fund, name, amount, date);
+                    donationList.add(donation);
+
+                }
+
+                contributor.setDonations(donationList);
+
+                return contributor;
+
+            } else if (status.equals("error")) {
+                throw new IllegalStateException("Client returned error");
+            }
+            Log.v("DataManager_editUserInfo", "returning null.");
+            return null;
+
+        } catch (JSONException je) {
+            throw new IllegalStateException("Client returned Malformed JSON");
+        } catch (IllegalStateException ie) {
+            throw ie;
+        } catch (Exception e) {
+            // e.printStackTrace();
             return null;
         }
     }
@@ -120,6 +235,10 @@ public class DataManager {
             throw new IllegalArgumentException("Arguments cannot be null!");
         }
 
+        if (fundNameCache.containsKey(id)) {
+            return fundNameCache.get(id);
+        }
+
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
         String response = client.makeRequest("/findFundNameById", map);
@@ -133,6 +252,7 @@ public class DataManager {
 
             if (status.equals("success")) {
                 String name = (String)json.get("data");
+                fundNameCache.put(id, name);
                 return name;
             } else if (status.equals("not found")) {
                 return "Unknown fund";
@@ -148,7 +268,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
@@ -226,7 +346,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
@@ -270,7 +390,7 @@ public class DataManager {
         } catch (IllegalStateException ie) {
             throw ie;
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return false;
         }
 

@@ -32,10 +32,8 @@ public class MakeDonationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_make_donation);
 
         try {
-            // it gets here
             final List<Organization> orgs = dataManager.getAllOrganizations();
             if (orgs == null) {
-                // setContentView(R.layout.activity_menu);
                 Toast.makeText(this, "Error in getting organizations. Please try again later.", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -47,7 +45,6 @@ public class MakeDonationActivity extends AppCompatActivity {
                 selectedFund = new Fund("0", "This Organization has no Funds.", 0, 0);
             }
 
-            // setContentView(R.layout.activity_make_donation); // same result as running this line above
             final Spinner orgSpinner = findViewById(R.id.orgSpinner);
             final Spinner fundSpinner = findViewById(R.id.fundSpinner);
 
@@ -133,11 +130,8 @@ public class MakeDonationActivity extends AppCompatActivity {
             orgSpinner.setAdapter(dataAdapter);
 
         } catch (IllegalStateException ie) {
-            // setContentView(R.layout.activity_main);
             Toast.makeText(this, "Organizations could not be fetched. Please check connection.", Toast.LENGTH_LONG).show();
-            // finish();
         } catch (Exception e) {
-            // setContentView(R.layout.activity_menu);
             Toast.makeText(this, "An unexpected error occurred. Please try again.", Toast.LENGTH_LONG).show();
         }
 
