@@ -8,6 +8,8 @@ public class Organization {
 	private String description;
 	
 	private List<Fund> funds;
+
+	// constructor - test commit
 	
 	public Organization(String id, String name, String description) {
 		this.id = id;
