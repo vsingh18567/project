@@ -87,12 +87,11 @@ public class EditInfoActivity extends AppCompatActivity {
             }
 
         } catch (IllegalStateException illegalStateException) {
-            illegalStateException.printStackTrace();
             Toast.makeText(this, "Info could not be updated. Please check connection.", Toast.LENGTH_LONG).show();
         } catch (IllegalArgumentException illegalArgumentException) {
             Toast.makeText(this, "Info could not be updated. Please check your inputs and try again.", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             Toast.makeText(this, "An unexpected error occurred. Please try again.", Toast.LENGTH_LONG).show();
         }
     }

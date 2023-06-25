@@ -65,7 +65,7 @@ public class MenuActivity extends AppCompatActivity {
                         Toast.makeText(MenuActivity.this, "Identity could not be verified.", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // e.printStackTrace();
                     Toast.makeText(MenuActivity.this, "Error! Please try again.", Toast.LENGTH_LONG).show();
                 }
             }
