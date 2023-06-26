@@ -49,6 +49,12 @@ public class DataManager_getOrg_Test {
         dm = dataManagerFactory(response);
         assertFalse(dm.getOrg("hello"));
     }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullLogin() {
+        dm = dataManagerFactory("{}");
+        dm.getOrg(null);
+    }
 
     @Test(expected = IllegalStateException.class)
     public void testJSONException() {

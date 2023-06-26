@@ -81,6 +81,22 @@ public class DataManager_createOrg_Test {
 		dm.createOrg("new", "new","new org", "this is the new org");
 
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testNullArguments() {
+
+		DataManager dm = new DataManager(new WebClient("localhost", 3002) {
+
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return "{}";
+			}
+
+		});;
+
+		dm.createOrg(null, null, null, null);
+
+	}
 
 
 }

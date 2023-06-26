@@ -42,6 +42,22 @@ public class DataManager_getContributorName_Test {
         assertNotNull(name);
         assertEquals("name", name);
     }
+    
+    @Test
+    public void testCache() {
+        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+            @Override
+            public String makeRequest(String resource, Map<String, Object> queryParams) {
+                return "{\"status\":\"success\",\"data\":\"name\"}";
+            }
+        });
+        String name = dm.getContributorName("test");
+        assertNotNull(name);
+        assertEquals("name", name);
+        String name2 = dm.getContributorName("test");
+        assertNotNull(name2);
+        assertEquals("name", name2);
+    }
 
 
 }
