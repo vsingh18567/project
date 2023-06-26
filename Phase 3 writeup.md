@@ -21,4 +21,4 @@ For the user interface, added an Edit Info button in the Menu (in `activity_menu
 # Known bugs / issues
 
 # Contributions of team members
-Lisa completed task 3.1, Vikram completed tasks 3.2 and 3.3, Michelle completed task 3.4, Grace completed task 3.7. All members contributed to the writeup, focusing on the features they implemented.
+Lisa completed task 3.1, Vikram completed tasks 3.2 and 3.3, Michelle completed task 3.4, Grace completed task 3.7. All members contributed to the writeup, focusing on the features they implemented. All members were involved in quality assurance during Phase 3 release validation.
