@@ -44,7 +44,7 @@
         android:inputType="number"
         app:layout_constraintBottom_toTopOf="@+id/edit_CVV"
         app:layout_constraintEnd_toEndOf="@+id/edit_CVV"
-        app:layout_constraintTop_toTopOf="@+id/editText_Email"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Email"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <EditText
@@ -56,7 +56,7 @@
         android:inputType="number"
         app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_ExpiryMonth" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_ExpiryYear" />
 
     <EditText
         android:id="@+id/edit_ExpiryYear"
@@ -64,9 +64,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/edit_ExpiryMonth"
-        app:layout_constraintEnd_toEndOf="@+id/edit_ExpiryMonth"
-        app:layout_constraintTop_toBottomOf="@+id/edit_CVV" />
+        app:layout_constraintBottom_toTopOf="@+id/edit_PostalCode"
+        app:layout_constraintEnd_toEndOf="@+id/edit_PostalCode"
+        app:layout_constraintTop_toBottomOf="@+id/edit_ExpiryMonth" />
 
     <EditText
         android:id="@+id/edit_CVV"
@@ -74,8 +74,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/edit_ExpiryYear"
-        app:layout_constraintEnd_toEndOf="@+id/edit_ExpiryYear"
+        app:layout_constraintBottom_toTopOf="@+id/edit_ExpiryMonth"
+        app:layout_constraintEnd_toEndOf="@+id/edit_ExpiryMonth"
         app:layout_constraintTop_toBottomOf="@+id/edit_CCN" />
 
     <EditText
@@ -84,9 +84,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/edit_PostalCode"
-        app:layout_constraintEnd_toEndOf="@+id/edit_PostalCode"
-        app:layout_constraintTop_toBottomOf="@+id/edit_ExpiryYear" />
+        app:layout_constraintBottom_toTopOf="@+id/edit_ExpiryYear"
+        app:layout_constraintEnd_toEndOf="@+id/edit_ExpiryYear"
+        app:layout_constraintTop_toBottomOf="@+id/edit_CVV" />
 
     <TextView
         android:id="@+id/textView11"
