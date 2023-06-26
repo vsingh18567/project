@@ -13,6 +13,9 @@ public class UserInterface {
 	private Organization org;
 	private final Scanner in = new Scanner(System.in);
 	private Map<Integer, String> aggDonationsFundMap;
+	private String login;
+	private String password;
+	private boolean argLineLogin = false;
 
 	public UserInterface(DataManager dataManager, Organization org) {
 		this.dataManager = dataManager;
@@ -321,38 +324,34 @@ public class UserInterface {
 		System.out.println("Number of donations: " + donations.size());
 		System.out.println("Total donation amount: $" + totalDonation + " (" + (totalDonation/target)*100 + "% of target)");
 		
-		System.out.println("\nEnter 'donation' to make a donation to this fund.");		
-
-		System.out.println("\n" + //
-				"You can display donations in chronological order or by contributor." + "\n" + //
-				"Do you want to display donations in chronological order? y/n");
-		
-		String response1 = in.nextLine();
-		
-		if (response1.equals("y")) {
-			System.out.println();
-			for (Donation donation : donations) {
-				// print donation dates in display format (e.g., June 18, 2021)
-				System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on "
-						+ donation.getDateFormatted());
+		while (true) {
+			System.out.println("\nEnter 'o' to display donations in chronological order.");
+			System.out.println("Enter 'c' to display donations by contributor.");		
+			System.out.println("Enter 'donation' to make a new donation to this fund.");
+			System.out.println("Press the Enter key to go back to the listing of funds.\n");
+			
+			
+			String response = in.nextLine();
+			
+			if (response.equals("o")) {
+				System.out.println();
+				for (Donation donation : donations) {
+					// print donation dates in display format (e.g., June 18, 2021)
+					System.out.println("* " + donation.getContributorName() + ": $" + donation.getAmount() + " on "
+							+ donation.getDateFormatted());
+				}
+			} else if (response.equals("donation")) {
+				createDonation(fund.getId());
+			} else if (response.equals("c")) {
+				System.out.println("\n" + aggregateDonationsString(fundNumber, fund.getContributorSumDonations(), fund.getContributorNumDonations()));
+			} else {
+				break;
 			}
-		} else if (response1.equals("donation")) {
-			createDonation(fund.getId());
+
 		}
-
-		System.out.println("\n" + //
-				"Do you want to display donations by contributor? y/n");
 		
-		String response2 = in.nextLine();
 		
-		if (response2.equals("y")) {
-			System.out.println("\n" + aggregateDonationsString(fundNumber, fund.getContributorSumDonations(), fund.getContributorNumDonations()));
-		} else if (response2.equals("donation")) {
-			createDonation(fund.getId());
-		}	
-
-		System.out.println("Press the Enter key to go back to the listing of funds");
-		in.nextLine();
+		
 	}
 	
 	private void createDonation(String fundId) {
@@ -477,10 +476,15 @@ public class UserInterface {
 		dataManager = new DataManager(new WebClient("localhost", 3001));
 		boolean retry = true;
 
-		System.out.println("Please enter your login: ");
-		String login = in.nextLine();
-		System.out.println("Please enter your password: ");
-		String password = in.nextLine();
+		if (argLineLogin) {
+			argLineLogin = false;
+		} else {
+			System.out.println("Please enter your login: ");
+			login = in.nextLine();
+			System.out.println("Please enter your password: ");
+			password = in.nextLine();
+		}
+
 
 		while (retry) {
 			try {
@@ -504,6 +508,13 @@ public class UserInterface {
 			return true;
 		}
 		
+	}
+
+
+	private void getLoginInfoFromArgs(String[] args) {
+		login = args[0];
+		password = args[1];
+		argLineLogin = true;
 	}
 
 	public boolean createOrg() {
@@ -572,12 +583,25 @@ public class UserInterface {
 
 		System.out.println("Welcome to the Organization App.");
 		System.out.println("Enter key for options");
+		if (args.length > 1) {
+			System.out.println("- c (use info provided in command line for login)");	
+		}
 		System.out.println("- e (log into an existing organization)");
 		System.out.println("- n (create a new organization)");
 
 		String answer = in.nextLine();
+		if (answer.equals("c")) {
+			if (args.length > 1) {
+				ui.getLoginInfoFromArgs(args);
+				if (!ui.login()) {
+					System.out.println("Login failed.");
+				} else {
+					ui.start();
+				}
+			}
+		}
 		while (true) {
-			if (answer.equals("n") || answer.equals("e")) {
+			if (answer.equals("c") || answer.equals("n") || answer.equals("e")) {
 				if (answer.equals("n")) {
 
 					if (!ui.createOrg()) {
@@ -599,8 +623,9 @@ public class UserInterface {
 				System.out.println("Do you want to log back in? y/n");
 				if (in.nextLine().equals("y")) {
 					ui = new UserInterface(null, null);
-					System.out.println("Would you like to log in with an existing organization or create a new organization?\n" + //
-						"Enter e for existing or n for new organization: ");
+					System.out.println("Enter key for options");
+					System.out.println("- e (log into an existing organization)");
+					System.out.println("- n (create a new organization)");
 					answer = in.nextLine();
 				} else {
 					System.out.println("Thanks for using Organization App.");
