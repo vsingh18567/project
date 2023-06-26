@@ -6,55 +6,54 @@ import org.junit.Test;
 
 public class DataManager_getOrg_Test {
 
-    @Test(expected = IllegalStateException.class)
-    public void testFailure() {
+    private DataManager dm;
 
+    public static String generateResponse(String status, String data) {
+        String base = "{";
+        if (status != null) {
+            base += "\"status\": \"" + status + "\",";
+        }
+        if (data != null) {
+            base += "\"data\":" + data;
+        }
+        base += "}";
+        return base;
+    }
+
+    public static DataManager dataManagerFactory(String response) {
         DataManager dm = new DataManager(new WebClient("localhost", 3001) {
             @Override
             public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"failure\"}";
+                return response;
             }
         });
+        return dm;
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testFailure() {
+        dm = dataManagerFactory(generateResponse("error", null));
         dm.getOrg("hi");
     }
 
     @Test
     public void testSimpleSuccess() {
-        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"success\",\"data\":{\"_id\":\"12345\",\"login\":\"new\",\"password\":\"new\",\"name\":\"new org\",\"description\":\"this is the new org\",\"funds\":[],\"__v\":0}}";
-            }
-        });
+        String response = generateResponse("success", "{\"_id\": \"123\"}");
+        dm = dataManagerFactory(response);
         assertTrue(dm.getOrg("new"));
     }
 
     @Test
     public void testOrgNotFound() {
-        DataManager dm = new DataManager(new WebClient("localhost", 3001) {
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{\"status\":\"success\",\"data\":{\"_id\":\"12345\",\"login\":\"new\",\"password\":\"new\",\"name\":\"new org\",\"description\":\"this is the new org\",\"funds\":[],\"__v\":0}}";
-            }
-        });
+        String response = generateResponse("success", null);
+        dm = dataManagerFactory(response);
         assertFalse(dm.getOrg("hello"));
     }
 
     @Test(expected = IllegalStateException.class)
     public void testException() {
-        DataManager dm = new DataManager(new WebClient("localhost", 3002) {
-
-            @Override
-            public String makeRequest(String resource, Map<String, Object> queryParams) {
-                return "{}";
-            }
-
-        });;
-
+        dm = dataManagerFactory("{}");
         dm.getOrg("login");
-
-
     }
-
 
 }

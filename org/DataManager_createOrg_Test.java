@@ -38,7 +38,7 @@ public class DataManager_createOrg_Test {
 
 			@Override
 			public String makeRequest(String resource, Map<String, Object> queryParams) {
-				return "{\"status\":\"failure\",\"data\":{\"_id\":\"12345\",\"login\":\"new\",\"password\":\"new\",\"name\":\"new org\",\"description\":\"this is the new org\",\"funds\":[],\"__v\":0}}";
+				return "{\"status\":\"failure\",\"data\":}";
 
 			}
 
