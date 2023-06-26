@@ -188,7 +188,7 @@ public class DataManager {
 		try {
 			json = (JSONObject) parser.parse(response);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			throw new IllegalStateException();
 		}
 		String status = (String)json.get("status");
@@ -217,7 +217,7 @@ public class DataManager {
 		try {
 			json = (JSONObject) parser.parse(response);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			throw new IllegalStateException();
 		}
 		String status = (String)json.get("status");
@@ -285,7 +285,7 @@ public class DataManager {
 		try {
 			json = (JSONObject) parser.parse(response);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			throw new IllegalStateException();
 		}
 		String status = (String) json.get("status");

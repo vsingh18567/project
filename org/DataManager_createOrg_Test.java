@@ -31,8 +31,26 @@ public class DataManager_createOrg_Test {
 		assertEquals("new org", o.getName());
 		
 	}
+	
 	@Test(expected = IllegalStateException.class)
 	public void testFailedCreation() {
+
+		DataManager dm = new DataManager(new WebClient("localhost", 3001) {
+
+			@Override
+			public String makeRequest(String resource, Map<String, Object> queryParams) {
+				return "{\"status\":\"failure\",\"data\":\"\"}";
+
+			}
+
+		});
+
+		dm.createOrg("new", "new","new fund", "this is the new fund");
+
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void testParseException() {
 
 		DataManager dm = new DataManager(new WebClient("localhost", 3001) {
 

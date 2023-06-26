@@ -51,8 +51,20 @@ public class DataManager_getOrg_Test {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testException() {
+    public void testJSONException() {
         dm = dataManagerFactory("{}");
+        dm.getOrg("login");
+    }
+    
+    @Test
+    public void testStatusException() {
+        dm = dataManagerFactory(generateResponse("success", "{\"_id\": null}"));
+        assertFalse(dm.getOrg("login"));
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void testParseException() {
+        dm = dataManagerFactory("");
         dm.getOrg("login");
     }
 
