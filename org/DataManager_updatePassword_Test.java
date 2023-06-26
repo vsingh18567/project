@@ -12,7 +12,7 @@ public class DataManager_updatePassword_Test {
     private DataManager dm;
 
     /*
-     * Tests for checkPassword
+     * Tests for updatePassword
      */
     public static String generateResponse(String status, String data) {
         String base = "{";
