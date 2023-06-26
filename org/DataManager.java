@@ -238,7 +238,7 @@ public class DataManager {
 		}
 		else throw new IllegalStateException();
 	}
-
+ 
 	/**
 	 * Attempt to save a new donation to a fund from a contributor.
 	 * This method uses the /makeDonation endpoint in the API
@@ -247,7 +247,7 @@ public class DataManager {
 	public String attemptMakeDonation (String contributorId, String fundId, long amount) {
 		if (fundId == null || contributorId == null || amount < 0) {throw new IllegalArgumentException();}
 		Map<String, Object> map = new HashMap<>();
-		map.put("contributor", fundId);
+		map.put("contributor", contributorId);
 		map.put("fund", fundId);
 		map.put("amount", amount);
 		String response = makeRequestWrapper("/makeDonation", map);
@@ -256,11 +256,9 @@ public class DataManager {
 		try {
 			json = (JSONObject) parser.parse(response);
 		} catch (ParseException e) {
-			e.printStackTrace();
 			throw new IllegalStateException();
 		}
 		String status = (String)json.get("status");
-
 		if (status == null) {throw new IllegalStateException();}
 
 		return status;
