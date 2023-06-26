@@ -244,8 +244,8 @@ public class DataManager {
 	 * This method uses the /makeDonation endpoint in the API
 	 * @return status message if received; null if no status message received
 	 */
-	public String attemptMakeDonation (String contributorId, String fundId, long amount) {
-		if (fundId == null || contributorId == null || amount < 0) {throw new IllegalArgumentException();}
+	public Donation attemptMakeDonation (String contributorId, String contributorName, String fundId, long amount) {
+		if (fundId == null || contributorId == null || contributorName == null || amount < 0) {throw new IllegalArgumentException();}
 		Map<String, Object> map = new HashMap<>();
 		map.put("contributor", contributorId);
 		map.put("fund", fundId);
@@ -259,9 +259,17 @@ public class DataManager {
 			throw new IllegalStateException();
 		}
 		String status = (String)json.get("status");
-		if (status == null) {throw new IllegalStateException();}
-
-		return status;
+		
+		if (status == null) {
+			throw new IllegalStateException();
+		}
+		
+		if (status.equals("success")) {
+			JSONObject donation = (JSONObject)json.get("data");
+			String dt = (String)donation.get("date");
+			return new Donation(fundId, contributorName, amount, dt);
+		}
+		else throw new IllegalStateException();
 	}	
 	
 	public boolean checkPassword(String org_id, String password) {

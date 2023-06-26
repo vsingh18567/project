@@ -1,4 +1,3 @@
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,7 +40,7 @@ public class UserInterface {
 			System.out.println("Enter 0 to create a new fund");
 			System.out.println("Enter -1 to logout.");
 			System.out.println("Enter p to change password");
-			System.out.println("Enter u to update org info");
+			System.out.println("Enter u to update organization info");
 			int option = -2;
 
 			boolean prompt = true;
@@ -112,7 +111,7 @@ public class UserInterface {
 			return;
 		}
 		if (passwordCheck) {
-			System.out.println("Org info:");
+			System.out.println("Organization info:");
 			System.out.println("- name: " + org.getName());
 			System.out.println("- description: " + org.getDescription());
 			String newName = null;
@@ -129,7 +128,7 @@ public class UserInterface {
 				newDesc = in.nextLine();
 			}
 			try {
-				if (dataManager.updateInfo(org, newName, newDesc)) System.out.println("Successfully updated org");
+				if (dataManager.updateInfo(org, newName, newDesc)) System.out.println("Successfully updated organization");
 			} catch (Exception e) {
 				System.out.println("Error updating info. Would you like to retry? [y/n]");
 				if (in.nextLine().equals("y")) {
@@ -417,11 +416,11 @@ public class UserInterface {
 
 		// 3 - attempt to save the donation
 
-		String status = "";
+		Donation d = null;
 
 		while (retry) {
 			try {
-				status = dataManager.attemptMakeDonation(contributorId, fundId, donationAmount);
+				d = dataManager.attemptMakeDonation(contributorId, contributorNameById(contributorId).trim(), fundId, donationAmount);
 				retry = false;
 			} catch (Exception e) {
 				System.out.println("Error in saving donation (" + e.toString() + "). Would you like to retry operation? [y/n]");
@@ -431,17 +430,17 @@ public class UserInterface {
 			}
 		}
 
-		if (status.equals("success")) {
+		if (d != null) {
 			Fund f = org.getFundById(fundId);
 
-			Donation d = new Donation(fundId, contributorName, donationAmount, Instant.now().toString());
+			//Donation d = new Donation(fundId, contributorName, donationAmount, Instant.now().toString());
 			f.addDonation(d);
 
 			System.out.println("The donation to " + org.getFundById(fundId).getName() + " was successfully saved.");
 
 			return;
 		} else {
-			System.out.println("Status: " + status + ". The donation was not saved due to a system problem. Would you like to retry operation? [y/n]");
+			System.out.println("The donation was not saved due to a system problem. Would you like to retry operation? [y/n]");
 			if (in.nextLine().equals("y")) {
 				createDonation(fundId);
 				return;
@@ -533,7 +532,7 @@ public class UserInterface {
 					System.out.println("Re-enter a password with alphanumeric characters:");
 					password = in.nextLine().trim();
 				}				
-				System.out.println("Please enter an org name: ");
+				System.out.println("Please enter an organization name: ");
 				String name = in.nextLine().trim();
 				// if invalid, request data re-entry
 				while (name.length() == 0) {
