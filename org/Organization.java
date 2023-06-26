@@ -46,4 +46,7 @@ public class Organization {
     	}
     	return null;
     }
+
+	public void setName(String name) {this.name = name;}
+	public void setDescription(String desc) {this.description = desc;}
 }

@@ -85,6 +85,30 @@ app.use('/updatePassword', (req, res) => {
 })
 
 /*
+update name or description for org
+*/
+app.use('/updateOrgInfo', (req, res) => {
+	var filter = {
+		"_id": req.query._id
+	}
+	var update = {}
+	if (req.query.name) {
+		update.name = req.query.name;
+	}
+	if (req.query.desc) {
+		update.description = req.query.desc
+	}
+	Organization.findOneAndUpdate(filter, update, (err, result) => {
+		if (err) {
+		    res.json({'status' : 'error', 'data' : err});
+		} else {
+			res.json({'status': 'success', 'data': result})
+		}
+	})
+})
+
+
+/*
 Create a new org
 */
 app.use('/createOrg', (req, res) => {

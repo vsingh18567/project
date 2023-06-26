@@ -313,4 +313,48 @@ public class DataManager {
 		return json.get("data") != null;
 
 	}
+
+	public boolean updateInfo(Organization org, String newName, String newDesc) {
+		if (org == null || newName == "" || newDesc == "") {
+			throw new IllegalArgumentException();
+		}
+		if (newName == null && newDesc == null) {
+			System.out.println("Nothing to change.");
+			return false;
+		}
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("_id", org.getId());
+		if (newName != null) {
+			map.put("name", newName);
+		}
+		if (newDesc != null) {
+			map.put("desc",newDesc);
+		}
+		String response = makeRequestWrapper("/updateOrgInfo", map);
+		JSONParser parser = new JSONParser();
+		JSONObject json;
+		try {
+			json = (JSONObject) parser.parse(response);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+
+		String status = (String) json.get("status");
+		if (status == null || !status.equals("success")) {
+			throw new IllegalStateException();
+		}
+		if (json.get("data") != null)  {
+			if (newName != null) {
+				org.setName(newName);
+			}
+			if (newDesc != null) {
+				org.setDescription(newDesc);
+			}
+		} else {
+			throw new IllegalStateException();
+		}
+		return true;
+	}
 }

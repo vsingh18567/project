@@ -41,7 +41,7 @@ public class UserInterface {
 			System.out.println("Enter 0 to create a new fund");
 			System.out.println("Enter -1 to logout.");
 			System.out.println("Enter p to change password");
-
+			System.out.println("Enter u to update org info");
 			int option = -2;
 
 			boolean prompt = true;
@@ -68,6 +68,9 @@ public class UserInterface {
 						} else if (next.equals("p")) {
 							option = -98;
 							prompt = false;
+						} else if (next.equals("u")) {
+							option = -97;
+							prompt = false;
 						}
 					}
 				} catch (InputMismatchException ime) {
@@ -84,12 +87,57 @@ public class UserInterface {
 				displayAllDonations();
 			} else if (option == -98) {
 				changePassword();
-			}
-			else if (option == -1) {
+			} else if (option == -97) {
+				updateInfo();
+			} else if (option == -1) {
 				break;
 			} else {
 				displayFund(option);
 			}
+		}
+	}
+
+	private void updateInfo() {
+		System.out.println("Enter existing password:");
+		in.nextLine();
+		String password = in.nextLine();
+		boolean passwordCheck;
+		try {
+			passwordCheck = dataManager.checkPassword(org.getId(), password);
+		} catch (Exception e) {
+			System.out.println("Error in checking password. Would you like to retry operation? [y/n]");
+			if (in.nextLine().equals("y")) {
+				changePassword();
+			}
+			return;
+		}
+		if (passwordCheck) {
+			System.out.println("Org info:");
+			System.out.println("- name: " + org.getName());
+			System.out.println("- description: " + org.getDescription());
+			String newName = null;
+			String newDesc = null;
+			System.out.println("Would you like to change name [y/n]?");
+			String yes = in.nextLine();
+			if (yes.equals("y")) {
+				System.out.println("Enter new name:");
+				newName = in.nextLine();
+			}
+			System.out.println("Would you like to change description [y/n]?");
+			if (in.nextLine().equals("y")) {
+				System.out.println("Enter new description:");
+				newDesc = in.nextLine();
+			}
+			try {
+				if (dataManager.updateInfo(org, newName, newDesc)) System.out.println("Successfully updated org");
+			} catch (Exception e) {
+				System.out.println("Error updating info. Would you like to retry? [y/n]");
+				if (in.nextLine().equals("y")) {
+					updateInfo();
+				}
+			}
+		} else {
+			System.out.println("Wrong password entered");
 		}
 	}
 
@@ -202,7 +250,7 @@ public class UserInterface {
 		try {
 			passwordCheck = dataManager.checkPassword(org.getId(), password);
 		} catch (Exception e) {
-			System.out.println("Error in changing password. Would you like to retry operation? [y/n]");
+			System.out.println("Error in checking password. Would you like to retry operation? [y/n]");
 			if (in.nextLine().equals("y")) {
 				changePassword();
 			}
@@ -485,7 +533,7 @@ public class UserInterface {
 					System.out.println("Re-enter a password with alphanumeric characters:");
 					password = in.nextLine().trim();
 				}				
-				System.out.println("Please enter a name: ");
+				System.out.println("Please enter an org name: ");
 				String name = in.nextLine().trim();
 				// if invalid, request data re-entry
 				while (name.length() == 0) {
